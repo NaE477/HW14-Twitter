@@ -44,4 +44,11 @@ public abstract class BaseTwit extends Identity {
         this.user = user;
         this.twitTime = new Date(System.currentTimeMillis());
     }
+
+    public BaseTwit(Integer id,String content,User user,Date date) {
+        super(id);
+        this.content = content;
+        this.user = user;
+        this.twitTime = date;
+    }
 }

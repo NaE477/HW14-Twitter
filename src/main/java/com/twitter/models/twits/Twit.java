@@ -4,6 +4,7 @@ import com.twitter.models.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,10 @@ public class Twit extends BaseTwit {
 
     public Twit(String content,User user) {
         super(content,user);
+    }
+
+    public Twit(Integer id, String content, User user, Date date) {
+        super(id,content,user,date);
     }
 
     @Override

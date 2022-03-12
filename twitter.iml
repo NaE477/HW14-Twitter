@@ -17,6 +17,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
+          <factory-entry name="twitter" value="fc838c88-0729-4571-b8c0-381ef3d9e116" />
           <factory-entry name="twitterQuiz" value="fc838c88-0729-4571-b8c0-381ef3d9e116" />
         </datasource-mapping>
         <naming-strategy-map />
