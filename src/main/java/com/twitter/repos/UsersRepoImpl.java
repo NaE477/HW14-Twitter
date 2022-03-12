@@ -1,15 +1,10 @@
 package com.twitter.repos;
 
 import com.twitter.models.user.User;
-import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo {
-
-    public UsersRepoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
 
     public User readById(Integer id) {
         try (var session = super.getSessionFactory().openSession()) {

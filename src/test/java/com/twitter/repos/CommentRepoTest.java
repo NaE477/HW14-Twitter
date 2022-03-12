@@ -4,48 +4,50 @@ import com.twitter.controllers.SessionFactorySingleton;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
-import com.twitter.services.TwitService;
-import com.twitter.services.UserService;
+import com.twitter.services.TwitServiceImpl;
+import com.twitter.services.UserServiceImpl;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CommentRepoTest {
-    private static SessionFactory sessionFactory;
     private static CommentRepoImpl commentRepo;
-    private static TwitService twitService;
-    private static UserService userService;
+    private static TwitServiceImpl twitService;
+    private static UserServiceImpl userService;
 
     @BeforeAll
     static void initialize() {
-        sessionFactory = SessionFactorySingleton.getInstance();
-        commentRepo = new CommentRepoImpl(sessionFactory);
-        twitService = new TwitService(sessionFactory);
-        userService = new UserService(sessionFactory);
+        commentRepo = new CommentRepoImpl();
+        twitService = new TwitServiceImpl();
+        userService = new UserServiceImpl();
     }
 
     @Test
     void connectionTest() {
         //Arrange
-
+        AtomicReference<SessionFactory> sessionFactory = null;
         //Act
 
         //Assert
-        assertDoesNotThrow(() -> sessionFactory = SessionFactorySingleton.getInstance());
+        assertDoesNotThrow(() -> {
+            assert false;
+            sessionFactory.set(SessionFactorySingleton.getInstance());
+        });
     }
 
     @Test
     void insertTest() {
         //Arrange
         User user = new User(0,"user","user","user","user","user@mail.com");
-        User newUser = userService.singUp(user);
+        User newUser = userService.insert(user);
         Twit twit = new Twit("twit content",newUser);
-        twitService.twit(twit);
+        twitService.insert(twit);
         Comment comment = new Comment("comment content",user,twit);
 
         //Act
@@ -62,9 +64,9 @@ class CommentRepoTest {
     void readTest() {
         //Arrange
         User user = new User(0,"user","user","user","user","user@mail.com");
-        User newUser = userService.singUp(user);
+        User newUser = userService.insert(user);
         Twit twit = new Twit("twit content",user);
-        twitService.twit(twit);
+        twitService.insert(twit);
         Comment comment = new Comment("comment content",newUser,twit);
         Comment newComment = commentRepo.ins(comment);
 
@@ -80,9 +82,9 @@ class CommentRepoTest {
     void readAllTest() {
         //Arrange
         User user = new User(0,"user","user","user","user","user@mail.com");
-        userService.singUp(user);
+        userService.insert(user);
         Twit twit = new Twit("twit content",user);
-        twitService.twit(twit);
+        twitService.insert(twit);
         Comment comment = new Comment("comment content",user,twit);
         commentRepo.ins(comment);
 
@@ -99,9 +101,9 @@ class CommentRepoTest {
     void updateTest() {
         //Arrange
         User user = new User(0,"user","user","user","user","user@mail.com");
-        userService.singUp(user);
+        userService.insert(user);
         Twit twit = new Twit("twit content",user);
-        Twit newTwit = twitService.twit(twit);
+        twitService.insert(twit);
         Comment comment = new Comment("comment content",user,twit);
         Comment newComment = commentRepo.ins(comment);
 
@@ -121,9 +123,9 @@ class CommentRepoTest {
     void deleteTest() {
         //Arrange
         User user = new User(0,"user","user","user","user","user@mail.com");
-        userService.singUp(user);
+        userService.insert(user);
         Twit twit = new Twit("twit content",user);
-        twitService.twit(twit);
+        twitService.insert(twit);
         Comment comment = new Comment("comment content",user,twit);
         Comment newComment = commentRepo.ins(comment);
 

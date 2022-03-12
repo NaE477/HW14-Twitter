@@ -2,14 +2,10 @@ package com.twitter.repos;
 
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
-import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class TwitRepoImpl extends BaseRepositoryImpl<Twit> implements TwitRepo {
-    public TwitRepoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
 
     public Twit readById(Integer id) {
         try (var session = super.getSessionFactory().openSession()) {

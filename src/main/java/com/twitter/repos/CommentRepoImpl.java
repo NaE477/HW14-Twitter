@@ -3,14 +3,10 @@ package com.twitter.repos;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
-import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements CommentRepo {
-    public CommentRepoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
 
     @Override
     public Comment readById(Integer id) {

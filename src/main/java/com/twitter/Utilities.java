@@ -1,7 +1,7 @@
 package com.twitter;
 
 
-import com.twitter.services.UserService;
+import com.twitter.services.UserServiceImpl;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 public class Utilities {
 
     private final Scanner scanner = new Scanner(System.in);
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public Utilities(SessionFactory sessionFactory) {
-        userService = new UserService(sessionFactory);
+    public Utilities() {
+        userService = new UserServiceImpl();
     }
 
     public void menuViewer(ArrayList<String> options) {

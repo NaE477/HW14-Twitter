@@ -20,8 +20,8 @@ class TwitRepoTest {
     @BeforeAll
     static void initialize() {
         sessionFactory = SessionFactorySingleton.getInstance();
-        twitRepo = new TwitRepoImpl(sessionFactory);
-        usersRepo = new UsersRepoImpl(sessionFactory);
+        twitRepo = new TwitRepoImpl();
+        usersRepo = new UsersRepoImpl();
     }
 
     @Test

@@ -4,9 +4,9 @@ import com.twitter.Utilities;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
-import com.twitter.services.CommentService;
-import com.twitter.services.TwitService;
-import com.twitter.services.UserService;
+import com.twitter.services.CommentServiceImpl;
+import com.twitter.services.TwitServiceImpl;
+import com.twitter.services.UserServiceImpl;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
@@ -15,18 +15,18 @@ import java.util.Scanner;
 
 public class UserController {
     private final User user;
-    private final UserService userService;
-    private final TwitService twitService;
-    private final CommentService commentService;
+    private final UserServiceImpl userService;
+    private final TwitServiceImpl twitService;
+    private final CommentServiceImpl commentService;
     private final Utilities utils;
     private final Scanner sc = new Scanner(System.in);
 
     public UserController(SessionFactory sessionFactory,User user) {
-        userService = new UserService(sessionFactory);
-        twitService = new TwitService(sessionFactory);
-        commentService = new CommentService(sessionFactory);
+        userService = new UserServiceImpl();
+        twitService = new TwitServiceImpl();
+        commentService = new CommentServiceImpl();
         this.user = user;
-        utils = new Utilities(sessionFactory);
+        utils = new Utilities();
     }
 
     public void entry() {
@@ -80,7 +80,7 @@ public class UserController {
                 case "1": {
                     System.out.println("Enter twit ID: ");
                     Integer twitId = utils.intReceiver();
-                    Twit toCheck = twitService.find(twitId);
+                    Twit toCheck = twitService.findById(twitId);
                     if (toCheck != null) {
                         utils.printGreen(toCheck.toString());
                         List<Comment> comments = commentService.findAllByTwit(toCheck);
@@ -92,7 +92,7 @@ public class UserController {
                 case "2": {
                     System.out.println("Enter twit ID: ");
                     Integer twitId = utils.intReceiver();
-                    Twit toComment = twitService.find(twitId);
+                    Twit toComment = twitService.findById(twitId);
                     if (toComment != null) {
                         commentOn(toComment);
                     } else utils.printRed("Wrong ID");
@@ -134,7 +134,7 @@ public class UserController {
                     if (usersTwits.size() > 0) {
                         System.out.println("Enter twit ID: ");
                         Integer twitId = utils.intReceiver();
-                        Twit toEditTwit = twitService.find(twitId);
+                        Twit toEditTwit = twitService.findById(twitId);
                         if (toEditTwit != null && usersTwits.contains(toEditTwit)) {
                             editTwit(toEditTwit);
                         } else System.out.println("Wrong ID");
@@ -144,7 +144,7 @@ public class UserController {
                     if (usersTwits.size() > 0) {
                         System.out.println("Enter twit ID: ");
                         Integer twitId = utils.intReceiver();
-                        Twit toViewComments = twitService.find(twitId);
+                        Twit toViewComments = twitService.findById(twitId);
                         if (toViewComments != null && usersTwits.contains(toViewComments)) {
                             viewComments(toViewComments);
                         } else System.out.println("Wrong ID");
@@ -163,7 +163,7 @@ public class UserController {
         System.out.println("Twit: ");
         String content = utils.contentReceiver();
         Twit newTwit = new Twit(content, user);
-        Twit insertTwit = twitService.twit(newTwit);
+        Twit insertTwit = twitService.insert(newTwit);
         utils.printGreen("\n\n\n\nNew Twit Added with ID: " + insertTwit.getId(), 1000);
     }
 
@@ -174,7 +174,7 @@ public class UserController {
         comment.setContent(content);
         comment.setOwnerTwit(toCommentOn);
         comment.setUser(user);
-        Comment newComment = commentService.newComment(comment);
+        Comment newComment = commentService.insert(comment);
         System.out.println("New Comment Added with ID: " + newComment.getId());
     }
 
@@ -182,7 +182,7 @@ public class UserController {
         System.out.println("Enter new Content for the twit: ");
         String newContent = utils.contentReceiver();
         twit.setContent(newContent);
-        Twit editedTwit = twitService.editTwit(twit);
+        Twit editedTwit = twitService.update(twit);
         System.out.println("Twit edited with ID: " + editedTwit.getId());
     }
 
@@ -190,7 +190,7 @@ public class UserController {
         System.out.println("Enter new Content for the twit: ");
         String newContent = utils.contentReceiver();
         comment.setContent(newContent);
-        Comment editedComment = commentService.editComment(comment);
+        Comment editedComment = commentService.update(comment);
         System.out.println("Twit edited with ID: " + editedComment.getId());
     }
 
@@ -248,7 +248,7 @@ public class UserController {
                     System.out.println("Sure? (Y/N)");
                     String yOrN = sc.nextLine();
                     if (yOrN.equals("y")) {
-                        userService.deleteUser(user);
+                        userService.delete(user);
                         System.out.println("Goodbye");
                         break label;
                     } else System.out.println("Cancelled.");
@@ -286,7 +286,7 @@ public class UserController {
                         if (twits.size() > 0) {
                             System.out.println("Choose Twit ID: ");
                             Integer twitId = utils.intReceiver();
-                            Twit twitToView = twitService.find(twitId);
+                            Twit twitToView = twitService.findById(twitId);
                             if (twitToView != null && twits.contains(twitToView)) {
                                 utils.printGreen(twitToView.toString());
                             } else System.out.println("Wrong ID.");

@@ -2,7 +2,7 @@ package com.twitter.controllers;
 
 import com.twitter.Utilities;
 import com.twitter.models.user.User;
-import com.twitter.services.UserService;
+import com.twitter.services.UserServiceImpl;
 import org.hibernate.SessionFactory;
 
 import java.util.Locale;
@@ -10,9 +10,9 @@ import java.util.Scanner;
 
 public class Executions {
     static SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
-    static Utilities utils = new Utilities(sessionFactory);
+    static Utilities utils = new Utilities();
     static Scanner sc = new Scanner(System.in);
-    static UserService userService = new UserService(sessionFactory);
+    static UserServiceImpl userService = new UserServiceImpl();
 
     public static void main(String[] args) {
         label:
@@ -59,7 +59,7 @@ public class Executions {
         String password = utils.passwordReceiver();
         String email = utils.emailReceiver();
         User singUpUser = new User(0, firstName, lastName, username, password, email);
-        User newUser = userService.singUp(singUpUser);
+        User newUser = userService.insert(singUpUser);
         utils.printGreen("New User made with ID: " + newUser.getId());
     }
 
