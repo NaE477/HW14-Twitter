@@ -4,8 +4,9 @@ import com.twitter.controllers.SessionFactorySingleton;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
-import com.twitter.services.TwitServiceImpl;
-import com.twitter.services.UserServiceImpl;
+import com.twitter.repos.impls.CommentRepoImpl;
+import com.twitter.services.impls.TwitServiceImpl;
+import com.twitter.services.impls.UserServiceImpl;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,7 +24,10 @@ class CommentRepoTest {
 
     @BeforeAll
     static void initialize() {
+        SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
+
         commentRepo = new CommentRepoImpl();
+
         twitService = new TwitServiceImpl();
         userService = new UserServiceImpl();
     }

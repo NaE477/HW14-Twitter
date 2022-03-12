@@ -1,4 +1,4 @@
-package com.twitter.repos;
+package com.twitter.repos.interfaces;
 
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;

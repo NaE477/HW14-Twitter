@@ -3,23 +3,24 @@ package com.twitter.repos;
 import com.twitter.controllers.SessionFactorySingleton;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
+import com.twitter.repos.impls.TwitRepoImpl;
+import com.twitter.repos.impls.UsersRepoImpl;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TwitRepoTest {
-    private static SessionFactory sessionFactory;
     private static TwitRepoImpl twitRepo;
     private static UsersRepoImpl usersRepo;
 
     @BeforeAll
     static void initialize() {
-        sessionFactory = SessionFactorySingleton.getInstance();
         twitRepo = new TwitRepoImpl();
         usersRepo = new UsersRepoImpl();
     }
@@ -27,11 +28,14 @@ class TwitRepoTest {
     @Test
     void connectionTest() {
         //Arrange
-
+        AtomicReference<SessionFactory> sessionFactory = null;
         //Act
 
         //Assert
-        assertDoesNotThrow( () -> sessionFactory = SessionFactorySingleton.getInstance());
+        assertDoesNotThrow( () -> {
+            assert false;
+            sessionFactory.set(SessionFactorySingleton.getInstance());
+        });
     }
 
     @Test

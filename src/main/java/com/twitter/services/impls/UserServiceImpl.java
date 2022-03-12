@@ -1,11 +1,12 @@
-package com.twitter.services;
+package com.twitter.services.impls;
 
 import com.twitter.models.user.User;
-import com.twitter.repos.UsersRepoImpl;
+import com.twitter.repos.impls.UsersRepoImpl;
+import com.twitter.services.interfaces.UserService;
 
 import java.util.List;
 
-public class UserServiceImpl extends BaseServiceImpl<User,UsersRepoImpl> implements UserService{
+public class UserServiceImpl extends BaseServiceImpl<User,UsersRepoImpl> implements UserService {
     private final UsersRepoImpl usersRepo = new UsersRepoImpl();
 
     public User findByUsername(String username){

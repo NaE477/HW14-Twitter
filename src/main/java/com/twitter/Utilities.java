@@ -1,8 +1,7 @@
 package com.twitter;
 
 
-import com.twitter.services.UserServiceImpl;
-import org.hibernate.SessionFactory;
+import com.twitter.services.impls.UserServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

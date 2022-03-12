@@ -1,4 +1,4 @@
-package com.twitter.services;
+package com.twitter.services.interfaces;
 
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;

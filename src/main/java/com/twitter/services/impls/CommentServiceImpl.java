@@ -1,9 +1,10 @@
-package com.twitter.services;
+package com.twitter.services.impls;
 
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
-import com.twitter.repos.CommentRepoImpl;
+import com.twitter.repos.impls.CommentRepoImpl;
+import com.twitter.services.interfaces.CommentService;
 
 import java.util.List;
 

@@ -1,7 +1,8 @@
-package com.twitter.repos;
+package com.twitter.repos.impls;
 
 import com.twitter.controllers.SessionFactorySingleton;
 import com.twitter.models.Identity;
+import com.twitter.repos.interfaces.BaseRepository;
 import lombok.Getter;
 import org.hibernate.SessionFactory;
 

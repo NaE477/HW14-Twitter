@@ -1,7 +1,8 @@
-package com.twitter.services;
+package com.twitter.services.impls;
 
 import com.twitter.models.Identity;
-import com.twitter.repos.BaseRepositoryImpl;
+import com.twitter.repos.impls.BaseRepositoryImpl;
+import com.twitter.services.interfaces.BaseService;
 
 import java.util.List;
 

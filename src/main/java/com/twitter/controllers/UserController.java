@@ -4,9 +4,9 @@ import com.twitter.Utilities;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
-import com.twitter.services.CommentServiceImpl;
-import com.twitter.services.TwitServiceImpl;
-import com.twitter.services.UserServiceImpl;
+import com.twitter.services.impls.CommentServiceImpl;
+import com.twitter.services.impls.TwitServiceImpl;
+import com.twitter.services.impls.UserServiceImpl;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;

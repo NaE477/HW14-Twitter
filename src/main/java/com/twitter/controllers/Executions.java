@@ -2,7 +2,7 @@ package com.twitter.controllers;
 
 import com.twitter.Utilities;
 import com.twitter.models.user.User;
-import com.twitter.services.UserServiceImpl;
+import com.twitter.services.impls.UserServiceImpl;
 import org.hibernate.SessionFactory;
 
 import java.util.Locale;

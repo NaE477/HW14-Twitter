@@ -1,6 +1,7 @@
-package com.twitter.repos;
+package com.twitter.repos.impls;
 
 import com.twitter.models.user.User;
+import com.twitter.repos.interfaces.UsersRepo;
 
 import java.util.List;
 
