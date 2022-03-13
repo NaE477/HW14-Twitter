@@ -9,13 +9,14 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class BaseTwit extends Identity {
 
     @Column(nullable = false
@@ -23,13 +24,12 @@ public abstract class BaseTwit extends Identity {
     private String content;
 
     @ManyToOne
-    @Column(name = "owner")
     private User user;
 
     @Column(name = "Twit_Time")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp twitTime;
+    private Date twitTime;
 
     @Column(name = "delete_stat")
     private Boolean isDeleted;
@@ -37,7 +37,7 @@ public abstract class BaseTwit extends Identity {
     public BaseTwit(String content,User user) {
         this.content = content;
         this.user = user;
-        this.twitTime = new Timestamp(System.currentTimeMillis());
+        this.twitTime = new Date(System.currentTimeMillis());
         isDeleted = false;
     }
 }

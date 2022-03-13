@@ -4,6 +4,9 @@ import com.twitter.Utilities;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
+import com.twitter.repos.impls.CommentRepoImpl;
+import com.twitter.repos.impls.TwitRepoImpl;
+import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.services.impls.CommentServiceImpl;
 import com.twitter.services.impls.TwitServiceImpl;
 import com.twitter.services.impls.UserServiceImpl;
@@ -21,11 +24,11 @@ public class UserController {
     private final Utilities utils;
     private final Scanner sc = new Scanner(System.in);
 
-    public UserController(SessionFactory sessionFactory,User user) {
-        userService = new UserServiceImpl();
-        twitService = new TwitServiceImpl();
-        commentService = new CommentServiceImpl();
-        this.user = user;
+    public UserController(SessionFactory sessionFactory,Integer userId) {
+        userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+        twitService = new TwitServiceImpl(new TwitRepoImpl(sessionFactory));
+        commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
+        this.user = userService.findById(userId);
         utils = new Utilities();
     }
 
@@ -67,7 +70,6 @@ public class UserController {
         label:
         while (true) {
             System.out.println("Welcome to twits sections");
-
             System.out.println("Choose an option: ");
             ArrayList<String> menu = new ArrayList<>();
             menu.add("1-View Twit");

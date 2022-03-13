@@ -5,6 +5,8 @@ import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.CommentRepoImpl;
+import com.twitter.repos.impls.TwitRepoImpl;
+import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.services.impls.TwitServiceImpl;
 import com.twitter.services.impls.UserServiceImpl;
 import org.hibernate.SessionFactory;
@@ -25,24 +27,23 @@ class CommentRepoTest {
     @BeforeAll
     static void initialize() {
         SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
+        commentRepo = new CommentRepoImpl(sessionFactory);
 
-        commentRepo = new CommentRepoImpl();
-
-        twitService = new TwitServiceImpl();
-        userService = new UserServiceImpl();
+        twitService = new TwitServiceImpl(new TwitRepoImpl(sessionFactory));
+        userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
     }
 
     @Test
     void connectionTest() {
         //Arrange
-        AtomicReference<SessionFactory> sessionFactory = null;
+        final SessionFactory[] sessionFactory = {null};
         //Act
 
         //Assert
         assertDoesNotThrow(() -> {
-            assert false;
-            sessionFactory.set(SessionFactorySingleton.getInstance());
+            sessionFactory[0] = (SessionFactorySingleton.getInstance());
         });
+        assertNotNull(sessionFactory[0]);
     }
 
     @Test
@@ -113,6 +114,7 @@ class CommentRepoTest {
 
         //Act
         Comment comment1 = commentRepo.readById(newComment.getId());
+        comment1.setContent("edited comment");
         Comment updateComment = commentRepo.update(comment1);
         Comment updatedComment = commentRepo.readById(updateComment.getId());
 

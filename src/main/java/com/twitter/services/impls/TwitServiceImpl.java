@@ -8,14 +8,17 @@ import com.twitter.services.interfaces.TwitService;
 import java.util.List;
 
 public class TwitServiceImpl extends BaseServiceImpl<Twit, TwitRepoImpl> implements TwitService {
-    private final TwitRepoImpl twitRepo = new TwitRepoImpl();
+
+    public TwitServiceImpl(TwitRepoImpl twitRepo) {
+        super(twitRepo);
+    }
 
     public List<Twit> findTwitsByUser(User user) {
-        return twitRepo.readByUser(user);
+        return repo.readByUser(user);
     }
 
     public void truncate() {
-        twitRepo.truncate();
+        repo.truncate();
     }
 
 }

@@ -9,6 +9,10 @@ import java.util.List;
 public abstract class BaseServiceImpl<T extends Identity, R extends BaseRepositoryImpl<T>> implements BaseService<T> {
     R repo;
 
+    public BaseServiceImpl(R repo) {
+        this.repo = repo;
+    }
+
     public T insert(T t) {
         return repo.ins(t);
     }

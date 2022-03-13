@@ -1,6 +1,5 @@
 package com.twitter.repos.impls;
 
-import com.twitter.controllers.SessionFactorySingleton;
 import com.twitter.models.Identity;
 import com.twitter.repos.interfaces.BaseRepository;
 import lombok.Getter;
@@ -8,7 +7,12 @@ import org.hibernate.SessionFactory;
 
 @Getter
 public abstract class BaseRepositoryImpl<T extends Identity> implements BaseRepository<T> {
-    private final SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
+    private final SessionFactory sessionFactory;
+
+    protected BaseRepositoryImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
 
     @Override
     public T ins(T t) {

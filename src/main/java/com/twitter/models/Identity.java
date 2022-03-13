@@ -15,7 +15,7 @@ import java.util.Objects;
 @MappedSuperclass
 public class Identity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer id;
 
     @Override

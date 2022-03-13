@@ -9,7 +9,5 @@ public interface UserService extends BaseService<User>{
 
     User findByEmail(String email);
 
-    Boolean login(String username, String password);
-
     List<User> searchUsername(String username);
 }

@@ -2,10 +2,15 @@ package com.twitter.repos.impls;
 
 import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.UsersRepo;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo {
+
+    public UsersRepoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     public User readById(Integer id) {
         try (var session = super.getSessionFactory().openSession()) {
@@ -75,7 +80,7 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
 
     public void truncate() {
         try (var session = super.getSessionFactory().openSession()) {
-            var transaction = session.getTransaction();
+            var transaction = session.beginTransaction();
             try {
                 String truncateStmt = "TRUNCATE users cascade ;";
                 session.createNativeQuery(truncateStmt).executeUpdate();

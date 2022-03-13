@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,21 +20,23 @@ class TwitRepoTest {
 
     @BeforeAll
     static void initialize() {
-        twitRepo = new TwitRepoImpl();
-        usersRepo = new UsersRepoImpl();
+        SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
+        twitRepo = new TwitRepoImpl(sessionFactory);
+        usersRepo = new UsersRepoImpl(sessionFactory);
     }
 
     @Test
     void connectionTest() {
         //Arrange
-        AtomicReference<SessionFactory> sessionFactory = null;
+        final SessionFactory[] sessionFactory = new SessionFactory[1];
         //Act
 
         //Assert
         assertDoesNotThrow( () -> {
-            assert false;
-            sessionFactory.set(SessionFactorySingleton.getInstance());
+
+            sessionFactory[0] =(SessionFactorySingleton.getInstance());
         });
+        assertNotNull(sessionFactory[0]);
     }
 
     @Test
@@ -93,7 +94,8 @@ class TwitRepoTest {
         twitRepo.ins(twit);
 
         //Act
-        Twit toUpdate = new Twit("edit",user);
+        Twit toUpdate = twitRepo.readById(twit.getId());
+        toUpdate.setContent("edit");
         Twit updatedTwit = twitRepo.update(toUpdate);
 
         //Assert

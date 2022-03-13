@@ -3,10 +3,15 @@ package com.twitter.repos.impls;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.TwitRepo;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class TwitRepoImpl extends BaseRepositoryImpl<Twit> implements TwitRepo {
+
+    public TwitRepoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     public Twit readById(Integer id) {
         try (var session = super.getSessionFactory().openSession()) {
@@ -46,7 +51,7 @@ public class TwitRepoImpl extends BaseRepositoryImpl<Twit> implements TwitRepo {
 
     public void truncate() {
         try (var session = super.getSessionFactory().openSession()) {
-            var transaction = session.getTransaction();
+            var transaction = session.beginTransaction();
             try {
                 String truncateStmt = "TRUNCATE twits cascade ;";
                 session.createNativeQuery(truncateStmt).executeUpdate();

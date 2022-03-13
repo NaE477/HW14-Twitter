@@ -4,9 +4,15 @@ import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.CommentRepo;
+import org.hibernate.SessionFactory;
+
 import java.util.List;
 
 public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements CommentRepo {
+
+    public CommentRepoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     public Comment readById(Integer id) {
@@ -65,9 +71,9 @@ public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements Comm
     @Override
     public void truncate() {
         try (var session = super.getSessionFactory().openSession()) {
-            var transaction = session.getTransaction();
+            var transaction = session.beginTransaction();
             try {
-                String truncateStmt = "TRUNCATE comments cascade ;";
+                String truncateStmt = "TRUNCATE twits cascade ;";
                 session.createNativeQuery(truncateStmt).executeUpdate();
                 transaction.commit();
             } catch (Exception e) {

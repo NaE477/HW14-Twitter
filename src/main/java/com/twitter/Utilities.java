@@ -1,6 +1,8 @@
 package com.twitter;
 
 
+import com.twitter.controllers.SessionFactorySingleton;
+import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.services.impls.UserServiceImpl;
 
 import java.util.ArrayList;
@@ -14,7 +16,8 @@ public class Utilities {
     private final UserServiceImpl userService;
 
     public Utilities() {
-        userService = new UserServiceImpl();
+        UsersRepoImpl usersRepo = new UsersRepoImpl(SessionFactorySingleton.getInstance());
+        userService = new UserServiceImpl(usersRepo);
     }
 
     public void menuViewer(ArrayList<String> options) {
