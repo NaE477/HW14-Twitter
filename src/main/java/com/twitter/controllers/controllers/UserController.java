@@ -1,9 +1,5 @@
-package com.twitter.controllers.userControllers;
+package com.twitter.controllers.controllers;
 
-import com.twitter.controllers.userControllers.commentingControllers.CommentingController;
-import com.twitter.controllers.userControllers.searchingControllers.SearchingController;
-import com.twitter.controllers.userControllers.twittingControllers.TwittingController;
-import com.twitter.controllers.userControllers.profileController.ProfileController;
 import com.twitter.services.interfaces.UserService;
 import com.twitter.services.impls.UserServiceImpl;
 import com.twitter.repos.impls.UsersRepoImpl;
@@ -81,6 +77,4 @@ public class UserController {
         SearchingController searchingController = new SearchingController(sessionFactory);
         searchingController.entry();
     }
-
-
 }

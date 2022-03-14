@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements CommentRepo {
+public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements CommentRepo, com.twitter.repos.interfaces.BaseRepository<Comment> {
 
     public CommentRepoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
@@ -20,7 +20,6 @@ public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements Comm
             try {
                 return session.get(Comment.class, id);
             } catch (Exception e) {
-                e.printStackTrace();
                 return null;
             }
         }

@@ -35,7 +35,7 @@ public abstract class BaseTwit extends Identity {
     @Column(name = "delete_stat")
     private Boolean isDeleted;
 
-    @OneToMany(mappedBy = "likers")
+    @OneToMany(mappedBy = "twit",fetch = FetchType.EAGER)
     private List<Like> likes;
 
     public BaseTwit(String content,User user) {

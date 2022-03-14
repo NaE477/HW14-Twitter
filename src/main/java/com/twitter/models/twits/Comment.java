@@ -30,7 +30,8 @@ public class Comment extends BaseTwit {
         return  "ID: " + super.getId() +
                 " ,Content: " + super.getContent() +
                 " \n,Time: " + super.getTwitTime() +
-                " \n,User: " + super.getUser().getUsername()
+                " \n,User: " + super.getUser().getUsername() +
+                " \n,Likes: " + super.getLikes().size()
                 ;
     }
 }

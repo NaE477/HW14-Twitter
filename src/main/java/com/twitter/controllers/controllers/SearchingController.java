@@ -1,4 +1,4 @@
-package com.twitter.controllers.userControllers.searchingControllers;
+package com.twitter.controllers.controllers;
 
 import com.twitter.controllers.Utilities;
 import com.twitter.models.twits.Comment;

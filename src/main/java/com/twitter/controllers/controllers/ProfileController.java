@@ -1,4 +1,4 @@
-package com.twitter.controllers.userControllers.profileController;
+package com.twitter.controllers.controllers;
 
 import com.twitter.controllers.Utilities;
 import com.twitter.models.user.User;

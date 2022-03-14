@@ -24,9 +24,10 @@ public class Twit extends BaseTwit {
     @Override
     public String toString() {
         return "ID: " + super.getId() +
-                " ,Content: " + super.getContent() +
+                " \n,Content: " + super.getContent() +
                 " \n,Twit Time: " + super.getTwitTime() +
-                " \n,User: " + super.getUser().getUsername()
+                " \n,User: " + super.getUser().getUsername() +
+                " \n,Likes: " + super.getLikes().size()
                 ;
     }
 }

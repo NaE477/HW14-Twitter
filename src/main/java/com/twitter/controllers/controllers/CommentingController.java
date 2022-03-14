@@ -1,7 +1,6 @@
-package com.twitter.controllers.userControllers.commentingControllers;
+package com.twitter.controllers.controllers;
 
 import com.twitter.controllers.Utilities;
-import com.twitter.models.Identity;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
@@ -94,7 +93,7 @@ public class CommentingController {
         } else utils.printRed("Wrong ID");
     }
 
-    private void commentOn(Twit toCommentOn) {
+    public void commentOn(Twit toCommentOn) {
         Comment comment = new Comment();
         System.out.println("Comment: ");
         comment.setContent(utils.contentReceiver());

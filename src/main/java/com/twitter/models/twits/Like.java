@@ -9,12 +9,14 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "likes")
 public class Like extends Identity {
     @ManyToOne
     private BaseTwit twit;

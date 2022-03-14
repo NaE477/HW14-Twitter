@@ -7,8 +7,6 @@ import org.hibernate.SessionFactory;
 import java.util.List;
 
 public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo {
-
-
     public UsersRepoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
     }

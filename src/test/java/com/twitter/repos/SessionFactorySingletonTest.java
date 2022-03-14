@@ -1,8 +1,6 @@
 package com.twitter.repos;
 
-import com.twitter.models.twits.BaseTwit;
-import com.twitter.models.twits.Comment;
-import com.twitter.models.twits.Twit;
+import com.twitter.models.twits.*;
 import com.twitter.models.user.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -22,11 +20,14 @@ public class SessionFactorySingletonTest {
 
             //registry is useful for creating session factory
             INSTANCE = new MetadataSources(registry)
+
+                    .addAnnotatedClass(User.class)
                     .addAnnotatedClass(BaseTwit.class)
                     .addAnnotatedClass(Twit.class)
                     .addAnnotatedClass(Comment.class)
+                    .addAnnotatedClass(Like.class)
+                    .addAnnotatedClass(Reply.class)
 
-                    .addAnnotatedClass(User.class)
                     .buildMetadata()
                     .buildSessionFactory();
         }

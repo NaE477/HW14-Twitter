@@ -34,4 +34,8 @@ public abstract class BaseServiceImpl<T extends Identity
     public void delete(T t) {
         repository.delete(t);
     }
+
+    public void truncate() {
+        repository.truncate();
+    }
 }

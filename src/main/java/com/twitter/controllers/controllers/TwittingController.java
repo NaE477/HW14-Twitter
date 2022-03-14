@@ -1,4 +1,4 @@
-package com.twitter.controllers.userControllers.twittingControllers;
+package com.twitter.controllers.controllers;
 
 import com.twitter.controllers.Utilities;
 import com.twitter.models.twits.Twit;
