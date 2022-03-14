@@ -1,6 +1,6 @@
 package com.twitter.controllers;
 
-import com.twitter.Utilities;
+import com.twitter.controllers.userControllers.UserController;
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.services.impls.UserServiceImpl;

@@ -1,6 +1,6 @@
 package com.twitter.controllers.userControllers.searchingControllers;
 
-import com.twitter.Utilities;
+import com.twitter.controllers.Utilities;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;

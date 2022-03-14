@@ -1,18 +1,14 @@
-package com.twitter.controllers;
+package com.twitter.controllers.userControllers;
 
-import com.twitter.Utilities;
 import com.twitter.controllers.userControllers.commentingControllers.CommentingController;
-import com.twitter.controllers.userControllers.profileController.ProfileController;
 import com.twitter.controllers.userControllers.searchingControllers.SearchingController;
 import com.twitter.controllers.userControllers.twittingControllers.TwittingController;
-import com.twitter.models.twits.Comment;
-import com.twitter.models.user.User;
-import com.twitter.repos.impls.CommentRepoImpl;
-import com.twitter.repos.impls.UsersRepoImpl;
-import com.twitter.services.impls.CommentServiceImpl;
-import com.twitter.services.impls.UserServiceImpl;
-import com.twitter.services.interfaces.CommentService;
+import com.twitter.controllers.userControllers.profileController.ProfileController;
 import com.twitter.services.interfaces.UserService;
+import com.twitter.services.impls.UserServiceImpl;
+import com.twitter.repos.impls.UsersRepoImpl;
+import com.twitter.controllers.Utilities;
+import com.twitter.models.user.User;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
@@ -20,7 +16,6 @@ import java.util.Scanner;
 
 public class UserController {
     private final User user;
-    private final CommentService commentService;
     private final SessionFactory sessionFactory;
     private final Utilities utils;
     private final Scanner sc = new Scanner(System.in);
@@ -28,7 +23,6 @@ public class UserController {
     public UserController(SessionFactory sessionFactory, Integer userId) {
         this.sessionFactory = sessionFactory;
         UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
-        commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
         this.user = userService.findById(userId);
         utils = new Utilities(sessionFactory);
     }
@@ -39,8 +33,8 @@ public class UserController {
             System.out.println("Welcome To User Section.\nChoose an Option: ");
 
             ArrayList<String> menu = new ArrayList<>();
-            menu.add("1-Comment under other twits");
-            menu.add("2-Twitting");
+            menu.add("1-Other twits Section");
+            menu.add("2-Your Twits Section");
             menu.add("3-Your Profile");
             menu.add("4-Search for user");
             menu.add("0-Exit");
@@ -88,11 +82,5 @@ public class UserController {
         searchingController.entry();
     }
 
-    public void editComment(Comment comment) {
-        System.out.println("Enter new Content for the comment: ");
-        String newContent = utils.contentReceiver();
-        comment.setContent(newContent);
-        Comment editedComment = commentService.update(comment);
-        System.out.println("Twit edited with ID: " + editedComment.getId());
-    }
+
 }

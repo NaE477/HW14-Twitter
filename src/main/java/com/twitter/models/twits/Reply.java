@@ -1,28 +1,26 @@
 package com.twitter.models.twits;
 
 import com.twitter.models.user.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "comments")
-public class Comment extends BaseTwit {
+public class Reply extends BaseTwit {
     @ManyToOne
-    private Twit ownerTwit;
+    private Comment comment;
 
-    @OneToMany(mappedBy = "comment")
-    private List<Reply> replies;
-
-    public Comment(String content, User user,Twit ownerTwit) {
-        super(content,user);
-        this.ownerTwit = ownerTwit;
+    public Reply(String content, User user, Comment comment) {
+        super(content, user);
+        this.comment = comment;
     }
 
     @Override

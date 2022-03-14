@@ -2,6 +2,7 @@ package com.twitter.models.user;
 
 import com.twitter.models.Identity;
 import com.twitter.models.twits.Comment;
+import com.twitter.models.twits.Like;
 import com.twitter.models.twits.Twit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,6 +41,9 @@ public class User extends Identity {
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "liker")
+    private List<Like> likes;
 
     public User(Integer id, String firstname, String lastname, String username, String password, String email) {
         super(id);

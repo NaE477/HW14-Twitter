@@ -1,6 +1,6 @@
 package com.twitter.controllers.userControllers.twittingControllers;
 
-import com.twitter.Utilities;
+import com.twitter.controllers.Utilities;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.CommentRepoImpl;
@@ -46,7 +46,7 @@ public class TwittingController {
             ArrayList<String> opts = new ArrayList<>();
             opts.add("1-New Twit");
             opts.add("2-Edit Twit");
-            opts.add("3-View Comments of a twit");
+            opts.add("3-View Comments of your twit");
             opts.add("0-Exit");
             utils.menuViewer(opts);
             String opt = sc.nextLine();
@@ -55,24 +55,10 @@ public class TwittingController {
                     newTwit();
                     break;
                 case "2":
-                    if (usersTwits.size() > 0) {
-                        System.out.println("Enter twit ID: ");
-                        Integer twitId = utils.intReceiver();
-                        Twit toEditTwit = twitService.findById(twitId);
-                        if (toEditTwit != null && usersTwits.contains(toEditTwit)) {
-                            editTwit(toEditTwit);
-                        } else System.out.println("Wrong ID");
-                    } else System.out.println("No Twits by you yet");
+                    controlEditTwit();
                     break;
                 case "3":
-                    if (usersTwits.size() > 0) {
-                        System.out.println("Enter twit ID: ");
-                        Integer twitId = utils.intReceiver();
-                        Twit toViewComments = twitService.findById(twitId);
-                        if (toViewComments != null && usersTwits.contains(toViewComments)) {
-                            viewComments(toViewComments);
-                        } else System.out.println("Wrong ID");
-                    }
+                    controlViewComments();
                     break;
                 case "0":
                     break label;
@@ -83,7 +69,7 @@ public class TwittingController {
         }
     }
 
-    public void newTwit() {
+    private void newTwit() {
         System.out.println("Twit: ");
         String content = utils.contentReceiver();
         Twit newTwit = new Twit(content, user);
@@ -91,7 +77,17 @@ public class TwittingController {
         utils.printGreen("\n\n\n\nNew Twit Added with ID: " + insertTwit.getId(), 1000);
     }
 
-    public void editTwit(Twit twit) {
+    private void controlEditTwit() {
+        List<Twit> twitsByUser = twitService.findTwitsByUser(user);
+        utils.iterateThrough(twitsByUser);
+        System.out.println("Enter twit ID: ");
+        Integer twitId = utils.intReceiver();
+        var twitToEdit = utils.findIdInCollection(twitsByUser, twitId);
+        if (twitToEdit != null) editTwit(twitToEdit);
+        else System.out.println("Wrong ID");
+    }
+
+    private void editTwit(Twit twit) {
         System.out.println("Enter new Content for the twit: ");
         String newContent = utils.contentReceiver();
         twit.setContent(newContent);
@@ -99,7 +95,17 @@ public class TwittingController {
         System.out.println("Twit edited with ID: " + editedTwit.getId());
     }
 
-    public void viewComments(Twit twit) {
+    private void controlViewComments() {
+        List<Twit> twitsByUser = twitService.findTwitsByUser(user);
+        utils.iterateThrough(twitsByUser);
+        System.out.println("Enter twit ID: ");
+        Integer twitId = utils.intReceiver();
+        var twitToEdit = utils.findIdInCollection(twitsByUser, twitId);
+        if (twitToEdit != null) viewComments(twitToEdit);
+        else System.out.println("Wrong ID");
+    }
+
+    private void viewComments(Twit twit) {
         twit.setComments(commentService.findAllByTwit(twit));
         utils.iterateThrough(twit.getComments());
         try {

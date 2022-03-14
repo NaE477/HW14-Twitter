@@ -1,13 +1,12 @@
-package com.twitter;
+package com.twitter.controllers;
 
 
+import com.twitter.models.Identity;
 import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.services.impls.UserServiceImpl;
 import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Utilities {
@@ -58,10 +57,10 @@ public class Utilities {
         }
     }
 
-    public String contentReceiver(){
-        while (true){
+    public String contentReceiver() {
+        while (true) {
             String comment = scanner.nextLine();
-            if(comment.length() > 280){
+            if (comment.length() > 280) {
                 System.out.println("Comment Limit is 280 characters");
             } else return comment;
         }
@@ -94,15 +93,6 @@ public class Utilities {
         }
     }
 
-    public Integer threeDigitsReceiver() {
-        while (true) {
-            int input = intReceiver();
-            if (input < 100 || input > 999) {
-                System.out.println("Enter a three digit number.");
-            } else return input;
-        }
-    }
-
     public <T> void iterateThrough(List<T> lists) {
         if (lists != null && lists.size() > 0) {
             for (T object : lists) {
@@ -113,6 +103,17 @@ public class Utilities {
             printYellow("This list is empty.");
         }
     }
+
+    public <T extends Identity> T findIdInCollection(Collection<T> toSearch, Integer id) {
+        if (toSearch != null && toSearch.size() > 0)
+            return toSearch
+                    .stream()
+                    .filter(t -> Objects.equals(t.getId(), id))
+                    .findAny()
+                    .orElse(null);
+        else return null;
+    }
+/*
 
     public int yearReceiver() {
         while (true) {
@@ -154,6 +155,7 @@ public class Utilities {
             }
         }
     }
+*/
 
     public void printRed(String input) {
         try {
@@ -174,7 +176,8 @@ public class Utilities {
             e.printStackTrace();
         }
     }
-    public void printGreen(String input,Integer waitTime){
+
+    public void printGreen(String input, Integer waitTime) {
         try {
             String ANSI_GREEN = "\u001B[32m";
             System.out.print("------------------------------\n" + ANSI_GREEN + input + ANSI_RESET + "\n------------------------------\n");

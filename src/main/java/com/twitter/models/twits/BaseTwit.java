@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,6 +34,9 @@ public abstract class BaseTwit extends Identity {
 
     @Column(name = "delete_stat")
     private Boolean isDeleted;
+
+    @OneToMany(mappedBy = "likers")
+    private List<Like> likes;
 
     public BaseTwit(String content,User user) {
         this.content = content;

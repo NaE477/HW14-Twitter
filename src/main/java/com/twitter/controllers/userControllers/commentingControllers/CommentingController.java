@@ -1,6 +1,7 @@
 package com.twitter.controllers.userControllers.commentingControllers;
 
-import com.twitter.Utilities;
+import com.twitter.controllers.Utilities;
+import com.twitter.models.Identity;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
@@ -15,9 +16,7 @@ import com.twitter.services.interfaces.TwitService;
 import com.twitter.services.interfaces.UserService;
 import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class CommentingController {
     private final TwitService twitService;
@@ -59,8 +58,11 @@ public class CommentingController {
                     break;
                 }
                 case "3": {
-                    utils.iterateThrough(twitService.findAll());
+                    viewAllTwits();
                     break;
+                }
+                case "4": {
+                    editCommentControl();
                 }
                 case "0":
                     break label;
@@ -71,7 +73,7 @@ public class CommentingController {
         }
     }
 
-    private void observeTwit(){
+    private void observeTwit() {
         System.out.println("Enter twit ID: ");
         Integer twitId = utils.intReceiver();
         Twit toCheck = twitService.findById(twitId);
@@ -100,5 +102,28 @@ public class CommentingController {
         comment.setUser(user);
         Comment newComment = commentService.insert(comment);
         System.out.println("New Comment Added with ID: " + newComment.getId());
+    }
+
+    private void viewAllTwits() {
+        utils.iterateThrough(twitService.findAll());
+    }
+
+    private void editCommentControl() {
+        List<Comment> commentsByUser = commentService.findAllByUser(user);
+        utils.iterateThrough(commentsByUser);
+        System.out.println("Enter comment ID: ");
+        Integer commentId = utils.intReceiver();
+        Comment commentToEdit = utils.findIdInCollection(commentsByUser,commentId);
+        if(commentToEdit != null) {
+            editComment(commentToEdit);
+        } else System.out.println("Wrong ID");
+    }
+
+    public void editComment(Comment comment) {
+        System.out.println("Enter new Content for the comment: ");
+        String newContent = utils.contentReceiver();
+        comment.setContent(newContent);
+        Comment editedComment = commentService.update(comment);
+        System.out.println("Twit edited with ID: " + editedComment.getId());
     }
 }
