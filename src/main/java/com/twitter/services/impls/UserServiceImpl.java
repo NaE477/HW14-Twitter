@@ -4,6 +4,7 @@ import com.twitter.models.user.User;
 import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.repos.interfaces.UsersRepo;
 import com.twitter.services.interfaces.UserService;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 
@@ -26,5 +27,6 @@ public class UserServiceImpl extends BaseServiceImpl<User,UsersRepo> implements 
     }
 
     public void truncate() {
-        repository.truncate();}
+        repository.truncate();
+    }
 }

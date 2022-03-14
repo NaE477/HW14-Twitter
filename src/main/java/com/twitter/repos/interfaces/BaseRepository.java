@@ -13,5 +13,6 @@ public interface BaseRepository<T extends Identity>{
     T update(T t);
 
     void delete(T t);
+
     void truncate();
 }

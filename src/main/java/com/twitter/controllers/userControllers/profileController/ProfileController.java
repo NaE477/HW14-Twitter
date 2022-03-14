@@ -61,6 +61,7 @@ public class ProfileController {
                 }
                 case "3": {
                     utils.printGreen(user.toString());
+                    break;
                 }
                 case "4": {
                     System.out.println("Sure? (Y/N)");

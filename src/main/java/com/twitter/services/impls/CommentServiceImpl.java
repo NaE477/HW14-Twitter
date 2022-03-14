@@ -6,14 +6,15 @@ import com.twitter.models.user.User;
 import com.twitter.repos.impls.CommentRepoImpl;
 import com.twitter.repos.interfaces.CommentRepo;
 import com.twitter.services.interfaces.CommentService;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class CommentServiceImpl extends BaseServiceImpl<Comment, CommentRepo>
         implements CommentService {
 
-    public CommentServiceImpl(CommentRepo repo) {
-        super(repo);
+    public CommentServiceImpl(CommentRepo repository) {
+        super(repository);
     }
 
     public List<Comment> findAllByTwit(Twit twit) {

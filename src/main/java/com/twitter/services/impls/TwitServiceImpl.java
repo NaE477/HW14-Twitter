@@ -5,6 +5,7 @@ import com.twitter.models.user.User;
 import com.twitter.repos.impls.TwitRepoImpl;
 import com.twitter.repos.interfaces.TwitRepo;
 import com.twitter.services.interfaces.TwitService;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 

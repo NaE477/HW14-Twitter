@@ -53,11 +53,10 @@ public class User extends Identity {
     @Override
     public String toString() {
         return "ID: " + super.getId() +
-                ", Firstname: '" + firstname + '\'' +
-                ", Lastname: '" + lastname + '\'' +
-                ", Username: '" + username + '\'' +
-                ", Password: '" + password + '\'' +
-                ", Email: '" + email + '\'' +
-                '}';
+                ", Firstname: '" + firstname +
+                ", Lastname: '" + lastname +
+                ", Username: '" + username +
+                ", Password: '" + password +
+                ", Email: '" + email;
     }
 }

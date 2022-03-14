@@ -38,7 +38,6 @@ public class CommentingController {
     }
 
     public void entry() {
-        List<Twit> twits = twitService.findAll();
         label:
         while (true) {
             System.out.println("Welcome to twits sections");
@@ -60,7 +59,7 @@ public class CommentingController {
                     break;
                 }
                 case "3": {
-                    utils.iterateThrough(twits);
+                    utils.iterateThrough(twitService.findAll());
                     break;
                 }
                 case "0":
