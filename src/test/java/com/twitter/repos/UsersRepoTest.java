@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +17,7 @@ class UsersRepoTest {
 
     @BeforeAll
     static void initialize() {
-        SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
+        SessionFactory sessionFactory = SessionFactorySingletonTest.getInstance();
         usersRepo = new UsersRepoImpl(sessionFactory);
     }
 

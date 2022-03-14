@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +25,7 @@ class CommentRepoTest {
 
     @BeforeAll
     static void initialize() {
-        SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
+        SessionFactory sessionFactory = SessionFactorySingletonTest.getInstance();
         commentRepo = new CommentRepoImpl(sessionFactory);
 
         twitService = new TwitServiceImpl(new TwitRepoImpl(sessionFactory));
@@ -36,12 +35,15 @@ class CommentRepoTest {
     @Test
     void connectionTest() {
         //Arrange
-        final SessionFactory[] sessionFactory = {null};
+        final SessionFactory[] sessionFactory = {null,null,null,null};
         //Act
 
         //Assert
         assertDoesNotThrow(() -> {
             sessionFactory[0] = (SessionFactorySingleton.getInstance());
+            sessionFactory[1] = (SessionFactorySingleton.getInstance());
+            sessionFactory[2] = (SessionFactorySingleton.getInstance());
+            sessionFactory[3] = (SessionFactorySingleton.getInstance());
         });
         assertNotNull(sessionFactory[0]);
     }

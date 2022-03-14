@@ -5,6 +5,7 @@ import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.TwitRepoImpl;
 import com.twitter.repos.impls.UsersRepoImpl;
+import com.twitter.repos.interfaces.UsersRepo;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,10 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class TwitRepoTest {
     private static TwitRepoImpl twitRepo;
     private static UsersRepoImpl usersRepo;
+    private static SessionFactory sessionFactory;
 
     @BeforeAll
     static void initialize() {
-        SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
+        sessionFactory = SessionFactorySingletonTest.getInstance();
         twitRepo = new TwitRepoImpl(sessionFactory);
         usersRepo = new UsersRepoImpl(sessionFactory);
     }
@@ -58,6 +60,7 @@ class TwitRepoTest {
     void read() {
         //Arrange
         User user = new User(0,"user","user","user","pass","user@mail.com");
+        UsersRepo usersRepo = new UsersRepoImpl(sessionFactory);
         usersRepo.ins(user);
         Twit twit = new Twit("content",user);
         Twit newTwit = twitRepo.ins(twit);

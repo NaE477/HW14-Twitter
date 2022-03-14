@@ -1,4 +1,4 @@
-package com.twitter.controllers;
+package com.twitter.repos;
 
 import com.twitter.models.twits.BaseTwit;
 import com.twitter.models.twits.Comment;
@@ -8,8 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-public class SessionFactorySingleton {
-    private SessionFactorySingleton() {
+public class SessionFactorySingletonTest {
+    private SessionFactorySingletonTest() {
     }
 
     private static class Holder {
@@ -17,7 +17,7 @@ public class SessionFactorySingleton {
 
         static {
             var registry = new StandardServiceRegistryBuilder()
-                    .configure()
+                    .configure("hibernate-test.cfg.xml")
                     .build();
 
             //registry is useful for creating session factory

@@ -8,6 +8,7 @@ import java.util.List;
 
 public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo {
 
+
     public UsersRepoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
@@ -17,7 +18,6 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
             try {
                 return session.get(User.class, id);
             } catch (Exception e) {
-                e.printStackTrace();
                 return null;
             }
         }
@@ -31,7 +31,6 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
                         .setParameter("username", username)
                         .getSingleResult();
             } catch (Exception e) {
-                e.printStackTrace();
                 return null;
             }
         }
@@ -45,7 +44,6 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
                         .setParameter("email", email)
                         .getSingleResult();
             } catch (Exception e) {
-                e.printStackTrace();
                 return null;
             }
         }
@@ -55,11 +53,10 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
         try (var session = super.getSessionFactory().openSession()) {
             try {
                 return session
-                        .createQuery("from User u where u.email like %:username%", User.class)
-                        .setParameter("username", username)
+                        .createQuery("from User u where u.email like :username", User.class)
+                        .setParameter("username", "%" + username + "%")
                         .list();
             } catch (Exception e) {
-                e.printStackTrace();
                 return null;
             }
         }
@@ -72,7 +69,6 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
                         .createQuery("from User", User.class)
                         .list();
             } catch (Exception e) {
-                e.printStackTrace();
                 return null;
             }
         }

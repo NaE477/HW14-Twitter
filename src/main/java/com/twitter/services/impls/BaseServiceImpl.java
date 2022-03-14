@@ -1,35 +1,36 @@
 package com.twitter.services.impls;
 
 import com.twitter.models.Identity;
-import com.twitter.repos.impls.BaseRepositoryImpl;
+import com.twitter.repos.interfaces.BaseRepository;
 import com.twitter.services.interfaces.BaseService;
 
 import java.util.List;
 
-public abstract class BaseServiceImpl<T extends Identity, R extends BaseRepositoryImpl<T>> implements BaseService<T> {
-    R repo;
+public abstract class BaseServiceImpl<T extends Identity
+        , R extends BaseRepository<T>> implements BaseService<T> {
+    R repository;
 
-    public BaseServiceImpl(R repo) {
-        this.repo = repo;
+    protected BaseServiceImpl(R repository) {
+        this.repository = repository;
     }
 
     public T insert(T t) {
-        return repo.ins(t);
+        return repository.ins(t);
     }
 
     public T findById(Integer id) {
-        return repo.readById(id);
+        return repository.readById(id);
     }
 
     public List<T> findAll() {
-        return repo.readAll();
+        return repository.readAll();
     }
 
     public T update(T t) {
-        return repo.update(t);
+        return repository.update(t);
     }
 
     public void delete(T t) {
-        repo.delete(t);
+        repository.delete(t);
     }
 }

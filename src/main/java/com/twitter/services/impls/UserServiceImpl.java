@@ -2,27 +2,29 @@ package com.twitter.services.impls;
 
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.UsersRepoImpl;
+import com.twitter.repos.interfaces.UsersRepo;
 import com.twitter.services.interfaces.UserService;
 
 import java.util.List;
 
-public class UserServiceImpl extends BaseServiceImpl<User,UsersRepoImpl> implements UserService {
+public class UserServiceImpl extends BaseServiceImpl<User,UsersRepo> implements UserService {
 
-    public UserServiceImpl(UsersRepoImpl repo) {
-        super(repo);
+    public UserServiceImpl(UsersRepo repository) {
+        super(repository);
     }
 
     public User findByUsername(String username){
-        return repo.readByUsername(username);
+        return repository.readByUsername(username);
     }
 
     public User findByEmail(String email){
-        return repo.readByEmail(email);
+        return repository.readByEmail(email);
     }
 
     public List<User> searchUsername(String username){
-        return repo.searchUsername(username);
+        return repository.searchUsername(username);
     }
 
-    public void truncate() {repo.truncate();}
+    public void truncate() {
+        repository.truncate();}
 }

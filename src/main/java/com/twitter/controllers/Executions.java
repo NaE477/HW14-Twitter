@@ -4,17 +4,17 @@ import com.twitter.Utilities;
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.services.impls.UserServiceImpl;
+import com.twitter.services.interfaces.UserService;
 import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Executions {
     static SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
-    static Utilities utils = new Utilities();
+    static Utilities utils = new Utilities(sessionFactory);
     static Scanner sc = new Scanner(System.in);
-    static UserServiceImpl userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+    static UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
 
     public static void main(String[] args) {
         label:
