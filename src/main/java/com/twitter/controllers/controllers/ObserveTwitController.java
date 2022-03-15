@@ -12,10 +12,12 @@ import com.twitter.services.interfaces.UserService;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class ObserveTwitController<T extends Twit> {
+    private final SessionFactory sessionFactory;
     private final LikingController<Twit> twitLikingController;
     private final CommentService commentService;
     private final Utilities utils;
@@ -24,6 +26,7 @@ public class ObserveTwitController<T extends Twit> {
     private final User user;
 
     public ObserveTwitController(SessionFactory sessionFactory, T twit, Integer userId) {
+        this.sessionFactory = sessionFactory;
         commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
         utils = new Utilities(sessionFactory);
         sc = new Scanner(System.in);
@@ -64,13 +67,21 @@ public class ObserveTwitController<T extends Twit> {
     }
 
     private void viewComments(Twit twit) {
-        ArrayList<String> comments = new ArrayList<>();
-        twit
-                .getComments()
+        List<Comment> comments = new ArrayList<>();
+        twit.getComments()
                 .stream()
                 .filter(comment -> !comment.getIsDeleted())
-                .forEach(comment -> comments.add(comment.toString()));
-        utils.menuViewer(comments);
+                .forEach(comments::add);
+        utils.iterateThrough(comments);
+        System.out.println("Enter comment ID to reply to it or 0 to exit: ");
+        int commentId = utils.intReceiver();
+        Comment toReply = utils.findIdInCollection(comments,commentId);
+        if (commentId != 0) {
+            if (toReply != null) {
+                ObserveCommentController<Comment> commentObserveCommentController = new ObserveCommentController<>(sessionFactory,toReply,user.getId());
+                commentObserveCommentController.viewComment();
+            }
+        }
     }
 
 

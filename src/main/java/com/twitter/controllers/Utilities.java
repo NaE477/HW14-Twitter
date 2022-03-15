@@ -18,7 +18,7 @@ public class Utilities {
         userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
     }
 
-    public void menuViewer(ArrayList<String> options) {
+    public void menuViewer(List<String> options) {
         System.out.println("\033[0;32m" + "           ----------------------------------------------");
         for (String opt : options) {
             System.out.println("           |" + opt);

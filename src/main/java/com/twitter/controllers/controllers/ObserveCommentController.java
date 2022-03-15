@@ -2,19 +2,12 @@ package com.twitter.controllers.controllers;
 
 import com.twitter.controllers.Utilities;
 import com.twitter.models.twits.Comment;
-import com.twitter.models.twits.Like;
 import com.twitter.models.twits.Reply;
 import com.twitter.models.user.User;
-import com.twitter.repos.impls.CommentRepoImpl;
-import com.twitter.repos.impls.LikeRepoImpl;
 import com.twitter.repos.impls.ReplyRepoImpl;
 import com.twitter.repos.impls.UsersRepoImpl;
-import com.twitter.services.impls.CommentServiceImpl;
-import com.twitter.services.impls.LikeServiceImpl;
 import com.twitter.services.impls.ReplyServiceImpl;
 import com.twitter.services.impls.UserServiceImpl;
-import com.twitter.services.interfaces.CommentService;
-import com.twitter.services.interfaces.LikeService;
 import com.twitter.services.interfaces.ReplyService;
 import com.twitter.services.interfaces.UserService;
 import org.hibernate.SessionFactory;
@@ -22,7 +15,6 @@ import org.hibernate.SessionFactory;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class ObserveCommentController<T extends Comment> {
     private final LikingController<Comment> commentLikingController;
@@ -43,7 +35,7 @@ public class ObserveCommentController<T extends Comment> {
         commentLikingController = new LikingController<>(sessionFactory,comment,user);
     }
 
-    public void viewTwit() {
+    public void viewComment() {
         label:
         while (true) {
             ArrayList<String> menu = new ArrayList<>();

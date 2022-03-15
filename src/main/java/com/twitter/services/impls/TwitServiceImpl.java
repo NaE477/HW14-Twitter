@@ -16,7 +16,7 @@ public class TwitServiceImpl extends BaseServiceImpl<Twit, TwitRepo> implements 
         super(repository);
     }
 
-    public List<Twit> findTwitsByUser(User user) {
+    public List<Twit> findAllByUser(User user) {
         return repository.readByUser(user);
     }
 

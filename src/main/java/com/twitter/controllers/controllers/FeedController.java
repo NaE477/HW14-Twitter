@@ -17,17 +17,19 @@ import org.hibernate.SessionFactory;
 
 import java.util.*;
 
-public class CommentingController {
+public class FeedController {
     private final TwitService twitService;
     private final CommentService commentService;
+    private final SessionFactory sessionFactory;
     private final Utilities utils;
     private final Scanner sc;
 
     private final User user;
 
-    public CommentingController(SessionFactory sessionFactory, Integer userId) {
+    public FeedController(SessionFactory sessionFactory, Integer userId) {
         twitService = new TwitServiceImpl(new TwitRepoImpl(sessionFactory));
         commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
+        this.sessionFactory = sessionFactory;
         utils = new Utilities(sessionFactory);
         sc = new Scanner(System.in);
 
@@ -38,27 +40,24 @@ public class CommentingController {
     public void entry() {
         label:
         while (true) {
-            System.out.println("Welcome to twits sections");
+            System.out.println("Welcome to feed");
             System.out.println("Choose an option: ");
             ArrayList<String> menu = new ArrayList<>();
-            menu.add("1-View Twit");
-            menu.add("2-Put comment under a twit");
+            menu.add("1-View Twit With Comments");
+            menu.add("2-Interact with Twit");
             menu.add("3-View all twits");
             menu.add("0-Exit");
             utils.menuViewer(menu);
             String opt = sc.nextLine();
             switch (opt) {
                 case "1":
-                    observeTwit();
+                    viewTwit();
                     break;
                 case "2":
-                    commentUnderTwit();
+                    observeTwit();
                     break;
                 case "3":
                     viewAllTwits();
-                    break;
-                case "4":
-                    editCommentControl();
                     break;
                 case "0":
                     break label;
@@ -69,7 +68,7 @@ public class CommentingController {
         }
     }
 
-    private void observeTwit() {
+    private void viewTwit() {
         System.out.println("Enter twit ID: ");
         Integer twitId = utils.intReceiver();
         Twit toCheck = twitService.findById(twitId);
@@ -81,45 +80,17 @@ public class CommentingController {
         } else utils.printRed("Wrong ID");
     }
 
-    private void commentUnderTwit() {
+    private void observeTwit() {
         System.out.println("Enter twit ID: ");
         Integer twitId = utils.intReceiver();
         Twit toComment = twitService.findById(twitId);
         if (toComment != null) {
-            commentOn(toComment);
+            ObserveTwitController<Twit> observeTwitController = new ObserveTwitController<>(sessionFactory,toComment,user.getId());
+            observeTwitController.viewTwit();
         } else utils.printRed("Wrong ID");
-    }
-
-    public void commentOn(Twit toCommentOn) {
-        Comment comment = new Comment();
-        System.out.println("Comment: ");
-        comment.setContent(utils.contentReceiver());
-        comment.setOwnerTwit(toCommentOn);
-        comment.setUser(user);
-        Comment newComment = commentService.insert(comment);
-        System.out.println("New Comment Added with ID: " + newComment.getId());
     }
 
     private void viewAllTwits() {
         utils.iterateThrough(twitService.findAll());
-    }
-
-    private void editCommentControl() {
-        List<Comment> commentsByUser = commentService.findAllByUser(user);
-        utils.iterateThrough(commentsByUser);
-        System.out.println("Enter comment ID: ");
-        Integer commentId = utils.intReceiver();
-        Comment commentToEdit = utils.findIdInCollection(commentsByUser,commentId);
-        if(commentToEdit != null) {
-            editComment(commentToEdit);
-        } else System.out.println("Wrong ID");
-    }
-
-    public void editComment(Comment comment) {
-        System.out.println("Enter new Content for the comment: ");
-        String newContent = utils.contentReceiver();
-        comment.setContent(newContent);
-        Comment editedComment = commentService.update(comment);
-        System.out.println("Twit edited with ID: " + editedComment.getId());
     }
 }

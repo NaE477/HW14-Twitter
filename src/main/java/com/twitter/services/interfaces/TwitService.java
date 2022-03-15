@@ -6,6 +6,6 @@ import com.twitter.models.user.User;
 import java.util.List;
 
 public interface TwitService extends BaseService<Twit> {
-    List<Twit> findTwitsByUser(User user);
+    List<Twit> findAllByUser(User user);
     void delete(User user);
 }

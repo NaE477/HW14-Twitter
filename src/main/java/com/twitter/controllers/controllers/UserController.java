@@ -59,8 +59,8 @@ public class UserController {
 
 
     public void feed() {
-        CommentingController commentingController = new CommentingController(sessionFactory,user.getId());
-        commentingController.entry();
+        FeedController feedController = new FeedController(sessionFactory,user.getId());
+        feedController.entry();
     }
 
     private void twitting() {

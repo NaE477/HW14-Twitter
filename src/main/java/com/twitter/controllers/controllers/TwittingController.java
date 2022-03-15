@@ -1,6 +1,7 @@
 package com.twitter.controllers.controllers;
 
 import com.twitter.controllers.Utilities;
+import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.CommentRepoImpl;
@@ -21,11 +22,13 @@ import java.util.Scanner;
 public class TwittingController {
     private final TwitService twitService;
     private final CommentService commentService;
+    private final SessionFactory sessionFactory;
     private final User user;
     private final Scanner sc;
     private final Utilities utils;
 
     public TwittingController(SessionFactory sessionFactory, Integer userId) {
+        this.sessionFactory = sessionFactory;
         twitService = new TwitServiceImpl(new TwitRepoImpl(sessionFactory));
         commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
         sc = new Scanner(System.in);
@@ -39,14 +42,15 @@ public class TwittingController {
     public void entry() {
         label:
         while (true) {
-            List<Twit> usersTwits = twitService.findTwitsByUser(user);
+            List<Twit> usersTwits = twitService.findAllByUser(user);
             System.out.println("Welcome to your twits section");
             utils.iterateThrough(usersTwits);
             System.out.println("Choose an options: ");
             ArrayList<String> opts = new ArrayList<>();
             opts.add("1-New Twit");
             opts.add("2-Edit Twit");
-            opts.add("3-View Comments of your twit");
+            opts.add("3-Edit Comment");
+            opts.add("4-View/Reply Comments of your twit");
             opts.add("0-Exit");
             utils.menuViewer(opts);
             String opt = sc.nextLine();
@@ -58,6 +62,8 @@ public class TwittingController {
                     controlEditTwit();
                     break;
                 case "3":
+                    controlEditComment();
+                case "4":
                     controlViewComments();
                     break;
                 case "0":
@@ -78,7 +84,7 @@ public class TwittingController {
     }
 
     private void controlEditTwit() {
-        List<Twit> twitsByUser = twitService.findTwitsByUser(user);
+        List<Twit> twitsByUser = twitService.findAllByUser(user);
         utils.iterateThrough(twitsByUser);
         System.out.println("Enter twit ID: ");
         Integer twitId = utils.intReceiver();
@@ -95,23 +101,47 @@ public class TwittingController {
         System.out.println("Twit edited with ID: " + editedTwit.getId());
     }
 
-    private void controlViewComments() {
-        List<Twit> twitsByUser = twitService.findTwitsByUser(user);
-        utils.iterateThrough(twitsByUser);
-        System.out.println("Enter twit ID: ");
-        Integer twitId = utils.intReceiver();
-        var twitToEdit = utils.findIdInCollection(twitsByUser, twitId);
-        if (twitToEdit != null) viewComments(twitToEdit);
+    private void controlEditComment() {
+        List<Comment> commentsByUser = commentService.findAllByUser(user);
+        utils.iterateThrough(commentsByUser);
+        System.out.println("Enter comment ID: ");
+        Integer commentId = utils.intReceiver();
+        var commentToEdit = utils.findIdInCollection(commentsByUser,commentId);
+        if(commentToEdit != null) editComment(commentToEdit);
         else System.out.println("Wrong ID");
     }
 
+    private void editComment(Comment comment) {
+        System.out.println("Enter new Content for the comment: ");
+        String newContent = utils.contentReceiver();
+        comment.setContent(newContent);
+        Comment editedComment = commentService.update(comment);
+        System.out.println("Comment edited with ID: " + editedComment.getId());
+    }
+
+    private void controlViewComments() {
+        List<Twit> twitsByUser = twitService.findAllByUser(user);
+        System.out.println("Enter Your Twit ID: ");
+        Integer twitId = utils.intReceiver();
+        var twitToViewComments = utils.findIdInCollection(twitsByUser,twitId);
+        if(twitToViewComments != null) {
+            viewComments(twitToViewComments);
+        } else System.out.println("Wrong ID");
+    }
+
     private void viewComments(Twit twit) {
-        twit.setComments(commentService.findAllByTwit(twit));
-        utils.iterateThrough(twit.getComments());
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        List<Comment> comments = commentService.findAllByTwit(twit);
+        utils.iterateThrough(comments);
+        System.out.println("Enter Comment ID to reply or 0 to Exit: ");
+        int commentId = utils.intReceiver();
+        Comment commentToObserve = utils.findIdInCollection(comments,commentId);
+        if(commentId != 0) {
+            if (commentToObserve != null) {
+                ObserveCommentController<Comment> observeCommentController = new ObserveCommentController<>(sessionFactory, commentToObserve, user.getId());
+                observeCommentController.viewComment();
+            } else System.out.println("Wrong ID");
         }
     }
+
+
 }

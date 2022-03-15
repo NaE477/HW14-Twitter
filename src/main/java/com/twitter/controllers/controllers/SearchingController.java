@@ -85,7 +85,7 @@ public class SearchingController {
     }
 
     private void viewAllActivityTwits(User userToView) {
-        List<BaseTwit> wholeTwits = twitService.findTwitsByUser(userToView).stream().map(twit -> (BaseTwit) twit).collect(Collectors.toList());
+        List<BaseTwit> wholeTwits = twitService.findAllByUser(userToView).stream().map(twit -> (BaseTwit) twit).collect(Collectors.toList());
         wholeTwits.addAll(commentService.findAllByUser(userToView).stream().map(comment -> (BaseTwit) comment).collect(Collectors.toList()));
         wholeTwits.addAll(commentService.findAllByUser(userToView).stream().map(comment -> (BaseTwit) comment).collect(Collectors.toList()));
         wholeTwits.addAll(replyService.findAllByUser(userToView).stream().map(comment -> (BaseTwit) comment).collect(Collectors.toList()));
@@ -95,7 +95,7 @@ public class SearchingController {
     }
 
     private void viewUserTwits(User userToView) {
-        List<Twit> twits = twitService.findTwitsByUser(userToView);
+        List<Twit> twits = twitService.findAllByUser(userToView);
         utils.iterateThrough(twits);
         if (twits.size() > 0) {
             System.out.println("Choose Twit ID: ");
@@ -117,7 +117,7 @@ public class SearchingController {
             Comment commentToView = commentService.findById(commentId);
             if (commentToView != null && comments.contains(commentToView)) {
                 ObserveCommentController<Comment> observeTwitController = new ObserveCommentController<>(sessionFactory, commentToView, user.getId());
-                observeTwitController.viewTwit();
+                observeTwitController.viewComment();
             } else System.out.println("Wrong ID.");
         } else utils.printRed("User has no twits yet");
     }
