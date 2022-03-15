@@ -28,19 +28,19 @@ public class UserController {
         while (true) {
             System.out.println("Welcome To User Section.\nChoose an Option: ");
 
-            ArrayList<String> menu = new ArrayList<>();
-            menu.add("1-Other twits Section");
-            menu.add("2-Your Twits Section");
-            menu.add("3-Your Profile");
-            menu.add("4-Search for user");
-            menu.add("0-Exit");
+            ArrayList<String> options = new ArrayList<>();
+            options.add("1-Twitter Feed");
+            options.add("2-Your Twits");
+            options.add("3-Your Profile");
+            options.add("4-Search for user");
+            options.add("0-Exit");
 
-            utils.menuViewer(menu);
+            utils.menuViewer(options);
 
             String inp = sc.nextLine();
             switch (inp) {
                 case "1":
-                    comments();
+                    feed();
                     break;
                 case "2":
                     twitting();
@@ -58,7 +58,7 @@ public class UserController {
     }
 
 
-    public void comments() {
+    public void feed() {
         CommentingController commentingController = new CommentingController(sessionFactory,user.getId());
         commentingController.entry();
     }
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     private void searchUser() {
-        SearchingController searchingController = new SearchingController(sessionFactory);
+        SearchingController searchingController = new SearchingController(sessionFactory,user.getId());
         searchingController.entry();
     }
 }

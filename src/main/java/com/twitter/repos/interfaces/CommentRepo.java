@@ -9,4 +9,5 @@ import java.util.List;
 public interface CommentRepo extends BaseRepository<Comment> {
     List<Comment> readAllByTwit(Twit twit);
     List<Comment> readAllByUser(User user);
+    void delete(User user);
 }

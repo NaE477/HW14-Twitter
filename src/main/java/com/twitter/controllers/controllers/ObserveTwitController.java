@@ -4,44 +4,34 @@ import com.twitter.controllers.Utilities;
 import com.twitter.models.twits.*;
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.CommentRepoImpl;
-import com.twitter.repos.impls.LikeRepoImpl;
-import com.twitter.repos.impls.ReplyRepoImpl;
 import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.services.impls.CommentServiceImpl;
-import com.twitter.services.impls.LikeServiceImpl;
-import com.twitter.services.impls.ReplyServiceImpl;
 import com.twitter.services.impls.UserServiceImpl;
 import com.twitter.services.interfaces.CommentService;
-import com.twitter.services.interfaces.LikeService;
-import com.twitter.services.interfaces.ReplyService;
 import com.twitter.services.interfaces.UserService;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
-public class ObserveTwitController<T extends BaseTwit> {
-    private final CommentingController commentingController;
+public class ObserveTwitController<T extends Twit> {
+    private final LikingController<Twit> twitLikingController;
     private final CommentService commentService;
-    private final ReplyService replyService;
-    private final LikeService likeService;
     private final Utilities utils;
     private final Scanner sc;
     private final T twit;
     private final User user;
 
     public ObserveTwitController(SessionFactory sessionFactory, T twit, Integer userId) {
-        commentingController = new CommentingController(sessionFactory,userId);
         commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
-        replyService = new ReplyServiceImpl(new ReplyRepoImpl(sessionFactory));
-        UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
-        likeService = new LikeServiceImpl(new LikeRepoImpl(sessionFactory));
         utils = new Utilities(sessionFactory);
         sc = new Scanner(System.in);
         this.twit = twit;
+
+        UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
         user = userService.findById(userId);
+        twitLikingController = new LikingController<>(sessionFactory,twit,user);
     }
 
     public void viewTwit() {
@@ -49,18 +39,20 @@ public class ObserveTwitController<T extends BaseTwit> {
         while (true) {
             ArrayList<String> menu = new ArrayList<>();
             menu.add(twit.toString());
-            menu.add("L: Like|D: Dislike|C: Comment|N: Do nothing");
+            menu.add("L: Like|D: Dislike|C: Comments|R: Reply|N: Do Nothing/Exit");
             utils.menuViewer(menu);
             String opt = sc.nextLine().toUpperCase(Locale.ROOT);
             switch (opt) {
                 case "L":
-                    like();
+                    twitLikingController.like();
                     break;
                 case "D":
-                    dislike();
+                    twitLikingController.dislike();
                     break;
                 case "C":
-                    comment();
+                    viewComments(twit);
+                case "R":
+                    commentOn(twit);
                     break;
                 case "N":
                     break label;
@@ -71,24 +63,17 @@ public class ObserveTwitController<T extends BaseTwit> {
         }
     }
 
-    private void like() {
-        if (!liked()) {
-            Like newLike = new Like(twit,user);
-            likeService.insert(newLike);
-        } else System.out.println("Already liked this twit.");
+    private void viewComments(Twit twit) {
+        ArrayList<String> comments = new ArrayList<>();
+        twit
+                .getComments()
+                .stream()
+                .filter(comment -> !comment.getIsDeleted())
+                .forEach(comment -> comments.add(comment.toString()));
+        utils.menuViewer(comments);
     }
 
-    private void dislike() {
-        if (liked()) {
-            Like toRemove = likeService.findByTwitAndUser(twit,user);
-            if (toRemove != null) likeService.delete(toRemove);
-        } else System.out.println("Haven't Liked this twit.");
-    }
 
-    private void comment() {
-        if (twit instanceof Twit) commentOn((Twit) twit);
-        else if (twit instanceof Comment) replyOn((Comment) twit);
-    }
 
     private void commentOn(Twit twit) {
         Comment comment = new Comment();
@@ -98,24 +83,5 @@ public class ObserveTwitController<T extends BaseTwit> {
         comment.setUser(user);
         Comment newComment = commentService.insert(comment);
         System.out.println("New Comment Added with ID: " + newComment.getId());
-    }
-
-    private void replyOn(Comment comment) {
-        Reply reply = new Reply();
-        System.out.println("Reply: ");
-        reply.setContent(utils.contentReceiver());
-        reply.setComment(comment);
-        reply.setUser(user);
-        Reply newReply = replyService.insert(reply);
-        System.out.println("New Reply Added with ID: " + newReply.getId());
-    }
-
-    private Boolean liked() {
-        return twit.getLikes()
-                .stream()
-                .map(Like::getLiker)
-                .filter(liker -> liker.equals(user))
-                .collect(Collectors.toList())
-                .contains(user);
     }
 }

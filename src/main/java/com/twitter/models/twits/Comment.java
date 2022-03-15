@@ -4,7 +4,7 @@ import com.twitter.models.user.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Getter

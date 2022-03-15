@@ -2,9 +2,9 @@ package com.twitter.controllers.controllers;
 
 import com.twitter.controllers.Utilities;
 import com.twitter.models.user.User;
-import com.twitter.repos.impls.UsersRepoImpl;
-import com.twitter.services.impls.UserServiceImpl;
-import com.twitter.services.interfaces.UserService;
+import com.twitter.repos.impls.*;
+import com.twitter.services.impls.*;
+import com.twitter.services.interfaces.*;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
@@ -37,41 +37,18 @@ public class ProfileController {
             utils.menuViewer(opts);
             String opt = sc.nextLine();
             switch (opt) {
-                case "1": {
-                    System.out.println("firstname: ");
-                    String newFirstName = sc.nextLine();
-                    System.out.println("lastname: ");
-                    String newLastName = sc.nextLine();
-                    user.setFirstname(newFirstName);
-                    user.setLastname(newLastName);
-                    User changed = userService.update(user);
-                    if (changed != null) {
-                        utils.printGreen("Changes saved");
-                    } else System.out.println("Something went wrong with changing");
+                case "1":
+                    changeInitials();
                     break;
-                }
-                case "2": {
-                    String password = utils.passwordReceiver();
-                    user.setPassword(password);
-                    User changed = userService.update(user);
-                    if (changed != null) {
-                        utils.printGreen("Changes saved");
-                    } else System.out.println("Something went wrong with changing");
+                case "2":
+                    changePassword();
                     break;
-                }
-                case "3": {
+                case "3":
                     utils.printGreen(user.toString());
                     break;
-                }
-                case "4": {
-                    System.out.println("Sure? (Y/N)");
-                    String yOrN = sc.nextLine();
-                    if (yOrN.equals("y")) {
-                        userService.delete(user);
-                        System.out.println("Goodbye");
-                        break label;
-                    } else System.out.println("Cancelled.");
-                }
+                case "4":
+                    deleteAccount();
+                    break;
                 case "0":
                     break label;
                 default:
@@ -79,5 +56,36 @@ public class ProfileController {
                     break;
             }
         }
+    }
+
+    private void changeInitials() {
+        System.out.println("firstname: ");
+        String newFirstName = sc.nextLine();
+        System.out.println("lastname: ");
+        String newLastName = sc.nextLine();
+        user.setFirstname(newFirstName);
+        user.setLastname(newLastName);
+        User changed = userService.update(user);
+        if (changed != null) {
+            utils.printGreen("Changes saved");
+        } else System.out.println("Something went wrong with changing");
+    }
+
+    private void changePassword() {
+        String password = utils.passwordReceiver();
+        user.setPassword(password);
+        User changed = userService.update(user);
+        if (changed != null) {
+            utils.printGreen("Changes saved");
+        } else System.out.println("Something went wrong with changing");
+    }
+
+    private void deleteAccount() {
+        System.out.println("Sure? (Y/N)");
+        String yOrN = sc.nextLine();
+        if (yOrN.equals("y")) {
+            userService.delete(user);
+            System.out.println("Goodbye");
+        } else System.out.println("Cancelled.");
     }
 }

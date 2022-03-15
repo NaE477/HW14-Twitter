@@ -68,6 +68,23 @@ public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements Comm
     }
 
     @Override
+    public void delete(User user) {
+        try (var session = super.getSessionFactory().openSession()) {
+            var transaction = session.beginTransaction();
+            try {
+                session
+                        .createQuery("update Comment c set c.isDeleted = true where c.user.id = :userId",Comment.class)
+                        .setParameter("userId",user.getId())
+                        .executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
+            }
+        }
+    }
+
+    @Override
     public void truncate() {
         try (var session = super.getSessionFactory().openSession()) {
             var transaction = session.beginTransaction();

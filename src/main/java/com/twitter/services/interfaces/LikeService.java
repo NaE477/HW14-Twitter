@@ -6,4 +6,5 @@ import com.twitter.models.user.User;
 
 public interface LikeService extends BaseService<Like> {
     <T extends BaseTwit> Like findByTwitAndUser(T twit, User user);
+    void delete(User user);
 }

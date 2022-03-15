@@ -48,21 +48,18 @@ public class CommentingController {
             utils.menuViewer(menu);
             String opt = sc.nextLine();
             switch (opt) {
-                case "1": {
+                case "1":
                     observeTwit();
                     break;
-                }
-                case "2": {
+                case "2":
                     commentUnderTwit();
                     break;
-                }
-                case "3": {
+                case "3":
                     viewAllTwits();
                     break;
-                }
-                case "4": {
+                case "4":
                     editCommentControl();
-                }
+                    break;
                 case "0":
                     break label;
                 default:

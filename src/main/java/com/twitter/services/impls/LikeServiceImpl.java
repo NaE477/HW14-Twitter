@@ -16,4 +16,10 @@ public class LikeServiceImpl extends BaseServiceImpl<Like, LikeRepo>
     public <T extends BaseTwit> Like findByTwitAndUser(T twit, User user) {
         return repository.readByTwitAndUser(twit,user);
     }
+
+    @Override
+    public void delete(User user) {
+        repository.delete(user);
+    }
+
 }

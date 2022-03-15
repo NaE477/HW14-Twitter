@@ -9,4 +9,5 @@ import java.util.List;
 public interface CommentService extends BaseService<Comment> {
     List<Comment> findAllByTwit(Twit twit);
     List<Comment> findAllByUser(User user);
+    void delete(User user);
 }

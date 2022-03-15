@@ -2,6 +2,7 @@ package com.twitter.repos.impls;
 
 import com.twitter.models.twits.BaseTwit;
 import com.twitter.models.twits.Like;
+import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.LikeRepo;
 import org.hibernate.SessionFactory;
@@ -61,6 +62,23 @@ public class LikeRepoImpl extends BaseRepositoryImpl<Like> implements LikeRepo {
                         .getSingleResult();
             } catch (Exception e) {
                 return null;
+            }
+        }
+    }
+
+    @Override
+    public void delete(User user) {
+        try (var session = super.getSessionFactory().openSession()) {
+            var transaction = session.beginTransaction();
+            try {
+                session
+                        .createQuery("delete Like l where l.liker.id = :userId", Like.class)
+                        .setParameter("userId",user.getId())
+                        .executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
             }
         }
     }

@@ -74,7 +74,7 @@ public class TwittingController {
         String content = utils.contentReceiver();
         Twit newTwit = new Twit(content, user);
         Twit insertTwit = twitService.insert(newTwit);
-        utils.printGreen("\n\n\n\nNew Twit Added with ID: " + insertTwit.getId(), 1000);
+        utils.printGreen("New Twit Added with ID: " + insertTwit.getId(), 1000);
     }
 
     private void controlEditTwit() {

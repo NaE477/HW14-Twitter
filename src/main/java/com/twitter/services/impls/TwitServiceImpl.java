@@ -24,4 +24,7 @@ public class TwitServiceImpl extends BaseServiceImpl<Twit, TwitRepo> implements 
         repository.truncate();
     }
 
+    public void delete(User user) {
+        repository.delete(user);
+    }
 }

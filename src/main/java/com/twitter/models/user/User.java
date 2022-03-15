@@ -45,6 +45,15 @@ public class User extends Identity {
     @OneToMany(mappedBy = "liker")
     private List<Like> likes;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_RELATIONS",
+            joinColumns = @JoinColumn(name = "FOLLOWED_ID"),
+            inverseJoinColumns = @JoinColumn(name = "FOLLOWER_ID"))
+    private List<User> followers;
+
+    @ManyToMany(mappedBy = "followers")
+    private List<User> following;
+
     public User(Integer id, String firstname, String lastname, String username, String password, String email) {
         super(id);
         this.firstname = firstname;

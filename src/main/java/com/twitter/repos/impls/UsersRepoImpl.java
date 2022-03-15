@@ -72,6 +72,22 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
         }
     }
 
+    public void delete(User user) {
+        try (var session = super.getSessionFactory().openSession()) {
+            var transaction = session.beginTransaction();
+            try {
+                session.createQuery("update Reply r set isDeleted = true where r.user.id = :userId").setParameter("userId",user.getId()).executeUpdate();
+                session.createQuery("update Comment c set isDeleted = true where c.user.id = :userId").setParameter("userId",user.getId()).executeUpdate();
+                session.createQuery("update Twit t set isDeleted = true where t.user.id = :userId").setParameter("userId",user.getId()).executeUpdate();
+                session.createQuery("delete Like l where l.liker.id = :userId").setParameter("userId",user.getId()).executeUpdate();
+                session.createQuery("delete User u where u.id = :userId").setParameter("userId",user.getId()).executeUpdate();
+                transaction.commit();
+            } catch (Exception e ){
+                transaction.rollback();
+            }
+        }
+    }
+
     public void truncate() {
         try (var session = super.getSessionFactory().openSession()) {
             var transaction = session.beginTransaction();

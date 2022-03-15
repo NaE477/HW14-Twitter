@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TwitService extends BaseService<Twit> {
     List<Twit> findTwitsByUser(User user);
+    void delete(User user);
 }

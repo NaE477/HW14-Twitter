@@ -25,6 +25,11 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment, CommentRepo>
         return repository.readAllByUser(user);
     }
 
+    @Override
+    public void delete(User user) {
+        repository.delete(user);
+    }
+
     public void truncate() {
         repository.truncate();
     }

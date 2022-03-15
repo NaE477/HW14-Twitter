@@ -49,6 +49,37 @@ public class TwitRepoImpl extends BaseRepositoryImpl<Twit> implements TwitRepo {
         }
     }
 
+    public void delete(Twit twit) {
+        try (var session = super.getSessionFactory().openSession()) {
+            var transaction = session.beginTransaction();
+            try {
+                session
+                        .createQuery("update Twit t set t.isDeleted = true where t.id = :twitId",Twit.class)
+                        .setParameter("twitId",twit.getId())
+                        .executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    public void delete(User user) {
+        try (var session = super.getSessionFactory().openSession()) {
+            var transaction = session.beginTransaction();
+            try {
+                session
+                        .createQuery("update Twit t set t.isDeleted = true where t.user.id = :userId",Twit.class)
+                        .setParameter("userId",user.getId())
+                        .executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
+            }
+        }
+    }
+
     public void truncate() {
         try (var session = super.getSessionFactory().openSession()) {
             var transaction = session.beginTransaction();

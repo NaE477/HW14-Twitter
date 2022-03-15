@@ -38,7 +38,7 @@ public abstract class BaseTwit extends Identity {
     @OneToMany(mappedBy = "twit",fetch = FetchType.EAGER)
     private List<Like> likes;
 
-    public BaseTwit(String content,User user) {
+    public BaseTwit(String content, User user) {
         this.content = content;
         this.user = user;
         this.twitTime = new Date(System.currentTimeMillis());
