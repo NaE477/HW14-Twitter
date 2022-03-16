@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +38,7 @@ class UsersRepoTest {
     @Test
     void ins() {
         //Arrange
-        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com");
+        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
 
         //Act
         User userId = usersRepo.ins(user);
@@ -50,7 +51,7 @@ class UsersRepoTest {
     @Test
     void read() {
         //Arrange
-        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com");
+        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         User newUser = usersRepo.ins(user);
 
         //Act
@@ -64,7 +65,7 @@ class UsersRepoTest {
     @Test
     void readAll() {
         //Arrange
-        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com");
+        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         usersRepo.ins(user);
 
         //Act
@@ -78,11 +79,11 @@ class UsersRepoTest {
     @Test
     void update() {
         //Arrange
-        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com");
+        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         User newUser = usersRepo.ins(user);
 
         //Act
-        User toUpdate = new User(newUser.getId(), "edit", "editlname", "edit", "edit", "edit");
+        User toUpdate = new User(newUser.getId(), "edit", "editlname", "edit", "edit", "edit", new HashSet<>(), new HashSet<>());
         User updateUser = usersRepo.update(toUpdate);
         User updatedUser = usersRepo.readById(updateUser.getId());
 
@@ -96,7 +97,7 @@ class UsersRepoTest {
     @Test
     void delete() {
         //Arrange
-        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com");
+        User user = new User(0, "fname", "lname", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         User newUser = usersRepo.ins(user);
 
         //Act

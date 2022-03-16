@@ -7,6 +7,7 @@ import com.twitter.services.impls.UserServiceImpl;
 import com.twitter.services.interfaces.UserService;
 import org.hibernate.SessionFactory;
 
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -59,7 +60,7 @@ public class Executions {
 
     public static void signUpSection() {
         String[] initials = initialReceiver();
-        User singUpUser = new User(0, initials[0], initials[1], initials[2], initials[3], initials[4]);
+        User singUpUser = new User(0, initials[0], initials[1], initials[2], initials[3], initials[4],new HashSet<>(),new HashSet<>());
         User newUser = userService.insert(singUpUser);
         utils.printGreen("New User made with ID: " + newUser.getId());
     }

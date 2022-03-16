@@ -92,7 +92,7 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
         try (var session = super.getSessionFactory().openSession()) {
             var transaction = session.beginTransaction();
             try {
-                String truncateStmt = "TRUNCATE users cascade ;";
+                String truncateStmt = "delete from users;";
                 session.createNativeQuery(truncateStmt).executeUpdate();
                 transaction.commit();
             } catch (Exception e) {

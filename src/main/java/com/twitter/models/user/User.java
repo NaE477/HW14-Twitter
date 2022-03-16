@@ -33,8 +33,8 @@ public class User extends Identity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false
-            , unique = true)
+    @Column(/*nullable = false
+            , */unique = true)
     private String email;
 
     @OneToMany(mappedBy = "user")
@@ -55,13 +55,15 @@ public class User extends Identity {
     @ManyToMany(mappedBy = "followers",fetch = FetchType.EAGER)
     private Set<User> following;
 
-    public User(Integer id, String firstname, String lastname, String username, String password, String email) {
+    public User(Integer id, String firstname, String lastname, String username, String password, String email,Set<User> followers,Set<User> following) {
         super(id);
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.followers = followers;
+        this.following = following;
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
@@ -20,8 +21,8 @@ public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
         try {
             if (rs.next()) {
                 return new Twit(
-                        rs.getInt("twit_id"),
-                        rs.getString("twit_content"),
+                        rs.getInt(1),
+                        rs.getString("content"),
                         new User(
                                 rs.getInt("user_id")
                                 , rs.getString("firstname")
@@ -29,8 +30,11 @@ public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
                                 , rs.getString("username")
                                 , rs.getString("password")
                                 , rs.getString("email")
+                                , new HashSet<>()
+                                , new HashSet<>()
                         )
-                        , rs.getDate("twit_date")
+                        , rs.getDate("twit_time")
+                        , new HashSet<>()
                 );
             }
         } catch (SQLException e) {
@@ -45,8 +49,8 @@ public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
         try {
             while (rs.next()) {
                 twits.add(new Twit(
-                        rs.getInt("twit_id"),
-                        rs.getString("twit_content"),
+                        rs.getInt(1),
+                        rs.getString("content"),
                         new User(
                                 rs.getInt("user_id")
                                 , rs.getString("firstname")
@@ -54,9 +58,11 @@ public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
                                 , rs.getString("username")
                                 , rs.getString("password")
                                 , rs.getString("email")
-
+                                , null
+                                , null
                         )
-                        , rs.getTimestamp("twit_date")
+                        , rs.getDate("twit_time")
+                        , null
                 ));
             }
             return twits;
@@ -69,15 +75,14 @@ public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
     @Override
     public Integer ins(Twit twit) {
         String insStmt = "INSERT INTO twits (id,content, user_id,twit_time,delete_stat) " +
-                "VALUES (twitter.public.hibernate_sequences.next_val,?,?,NOW(),false) RETURNING id;" +
-                "update twitter.public.hibernate_sequences set next_val = twitter.public.hibernate_sequences.next_val + 1;";
+                "VALUES (100,?,?,NOW(),false) RETURNING id;";
         try {
             PreparedStatement ps = super.getConnection().prepareStatement(insStmt);
             ps.setString(1, twit.getContent());
             ps.setInt(2, twit.getUser().getId());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt("twit_id");
+                return rs.getInt("id");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -152,7 +157,7 @@ public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
     }
 
     public void truncate() {
-        String truncateStmt = "TRUNCATE twits cascade ;";
+        String truncateStmt = "truncate twitter_test.public.twits cascade ;";
         try {
             PreparedStatement ps = super.getConnection().prepareStatement(truncateStmt);
             ps.executeUpdate();

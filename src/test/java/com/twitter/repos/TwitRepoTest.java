@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,9 +35,9 @@ class TwitRepoTest {
         //Act
 
         //Assert
-        assertDoesNotThrow( () -> {
+        assertDoesNotThrow(() -> {
 
-            sessionFactory[0] =(SessionFactorySingleton.getInstance());
+            sessionFactory[0] = (SessionFactorySingleton.getInstance());
         });
         assertNotNull(sessionFactory[0]);
     }
@@ -44,25 +45,25 @@ class TwitRepoTest {
     @Test
     void ins() {
         //Arrange
-        User user = new User(0,"user","user","user","pass","user@mail.com");
+        User user = new User(0, "user", "user", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         usersRepo.ins(user);
-        Twit twit = new Twit("content",user);
+        Twit twit = new Twit("content", user);
 
         //Act
         Twit newTwit = twitRepo.ins(twit);
 
         //Assert
         assertNotNull(newTwit);
-        assertEquals("content",twitRepo.readById(newTwit.getId()).getContent());
+        assertEquals("content", twitRepo.readById(newTwit.getId()).getContent());
     }
 
     @Test
     void read() {
         //Arrange
-        User user = new User(0,"user","user","user","pass","user@mail.com");
+        User user = new User(0, "user", "user", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         UsersRepo usersRepo = new UsersRepoImpl(sessionFactory);
         usersRepo.ins(user);
-        Twit twit = new Twit("content",user);
+        Twit twit = new Twit("content", user);
         Twit newTwit = twitRepo.ins(twit);
 
         //Act
@@ -75,9 +76,9 @@ class TwitRepoTest {
     @Test
     void readAll() {
         //Arrange
-        User user = new User(0,"user","user","user","pass","user@mail.com");
+        User user = new User(0, "user", "user", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         usersRepo.ins(user);
-        Twit twit = new Twit("content",user);
+        Twit twit = new Twit("content", user);
         twitRepo.ins(twit);
 
         //Act
@@ -85,15 +86,15 @@ class TwitRepoTest {
 
         //Assert
         assertNotNull(twits);
-        assertEquals(1,twits.size());
+        assertEquals(1, twits.size());
     }
 
     @Test
     void update() {
         //Arrange
-        User user = new User(0,"user","user","user","pass","user@mail.com");
+        User user = new User(0, "user", "user", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         usersRepo.ins(user);
-        Twit twit = new Twit("content",user);
+        Twit twit = new Twit("content", user);
         twitRepo.ins(twit);
 
         //Act
@@ -103,15 +104,15 @@ class TwitRepoTest {
 
         //Assert
         assertNotNull(updatedTwit);
-        assertEquals("edit",twitRepo.readById(updatedTwit.getId()).getContent());
+        assertEquals("edit", twitRepo.readById(updatedTwit.getId()).getContent());
     }
 
     @Test
     void delete() {
         //Arrange
-        User user = new User(0,"user","user","user","pass","user@mail.com");
+        User user = new User(0, "user", "user", "user", "pass", "user@mail.com", new HashSet<>(), new HashSet<>());
         usersRepo.ins(user);
-        Twit twit = new Twit("content",user);
+        Twit twit = new Twit("content", user);
         Twit newTwit = twitRepo.ins(twit);
 
         //Act

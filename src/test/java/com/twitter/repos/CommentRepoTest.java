@@ -14,6 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,7 @@ class CommentRepoTest {
     @Test
     void connectionTest() {
         //Arrange
-        final SessionFactory[] sessionFactory = {null,null,null,null};
+        final SessionFactory[] sessionFactory = {null, null, null, null};
         //Act
 
         //Assert
@@ -46,35 +47,38 @@ class CommentRepoTest {
             sessionFactory[3] = (SessionFactorySingleton.getInstance());
         });
         assertNotNull(sessionFactory[0]);
+        assertNotNull(sessionFactory[1]);
+        assertNotNull(sessionFactory[2]);
+        assertNotNull(sessionFactory[3]);
     }
 
     @Test
     void insertTest() {
         //Arrange
-        User user = new User(0,"user","user","user","user","user@mail.com");
+        User user = new User(0, "user", "user", "user", "user", "user@mail.com", new HashSet<>(), new HashSet<>());
         User newUser = userService.insert(user);
-        Twit twit = new Twit("twit content",newUser);
+        Twit twit = new Twit("twit content", newUser);
         twitService.insert(twit);
-        Comment comment = new Comment("comment content",user,twit);
+        Comment comment = new Comment("comment content", user, twit);
 
         //Act
         Comment newComment = commentRepo.ins(comment);
 
         //Assert
         assertNotNull(newComment);
-        assertNotEquals(0,comment.getId());
-        assertEquals(comment.getId(),newComment.getId());
+        assertNotEquals(0, comment.getId());
+        assertEquals(comment.getId(), newComment.getId());
     }
 
 
     @Test
     void readTest() {
         //Arrange
-        User user = new User(0,"user","user","user","user","user@mail.com");
+        User user = new User(0, "user", "user", "user", "user", "user@mail.com", new HashSet<>(), new HashSet<>());
         User newUser = userService.insert(user);
-        Twit twit = new Twit("twit content",user);
+        Twit twit = new Twit("twit content", user);
         twitService.insert(twit);
-        Comment comment = new Comment("comment content",newUser,twit);
+        Comment comment = new Comment("comment content", newUser, twit);
         Comment newComment = commentRepo.ins(comment);
 
         //Act
@@ -82,17 +86,17 @@ class CommentRepoTest {
 
         //Assert
         assertNotNull(comment1);
-        assertEquals("comment content",comment1.getContent());
+        assertEquals("comment content", comment1.getContent());
     }
 
     @Test
     void readAllTest() {
         //Arrange
-        User user = new User(0,"user","user","user","user","user@mail.com");
+        User user = new User(0, "user", "user", "user", "user", "user@mail.com", new HashSet<>(), new HashSet<>());
         userService.insert(user);
-        Twit twit = new Twit("twit content",user);
+        Twit twit = new Twit("twit content", user);
         twitService.insert(twit);
-        Comment comment = new Comment("comment content",user,twit);
+        Comment comment = new Comment("comment content", user, twit);
         commentRepo.ins(comment);
 
         //Act
@@ -100,18 +104,18 @@ class CommentRepoTest {
 
         //Assert
         assertNotNull(comments);
-        assertEquals(1,comments.size());
-        assertNotEquals(0,comments.size());
+        assertEquals(1, comments.size());
+        assertNotEquals(0, comments.size());
     }
 
     @Test
     void updateTest() {
         //Arrange
-        User user = new User(0,"user","user","user","user","user@mail.com");
+        User user = new User(0, "user", "user", "user", "user", "user@mail.com", new HashSet<>(), new HashSet<>());
         userService.insert(user);
-        Twit twit = new Twit("twit content",user);
+        Twit twit = new Twit("twit content", user);
         twitService.insert(twit);
-        Comment comment = new Comment("comment content",user,twit);
+        Comment comment = new Comment("comment content", user, twit);
         Comment newComment = commentRepo.ins(comment);
 
         //Act
@@ -123,18 +127,18 @@ class CommentRepoTest {
         //Assert
         assertNotNull(updatedComment);
         assertNotNull(updatedComment);
-        assertEquals("edited comment",updatedComment.getContent());
-        assertNotEquals("comment content",updatedComment.getContent());
+        assertEquals("edited comment", updatedComment.getContent());
+        assertNotEquals("comment content", updatedComment.getContent());
     }
 
     @Test
     void deleteTest() {
         //Arrange
-        User user = new User(0,"user","user","user","user","user@mail.com");
+        User user = new User(0, "user", "user", "user", "user", "user@mail.com", new HashSet<>(), new HashSet<>());
         userService.insert(user);
-        Twit twit = new Twit("twit content",user);
+        Twit twit = new Twit("twit content", user);
         twitService.insert(twit);
-        Comment comment = new Comment("comment content",user,twit);
+        Comment comment = new Comment("comment content", user, twit);
         Comment newComment = commentRepo.ins(comment);
 
         //Act
@@ -142,7 +146,7 @@ class CommentRepoTest {
 
         //Assert
         assertNull(commentRepo.readById(newComment.getId()));
-        assertEquals(0,commentRepo.readAll().size());
+        assertEquals(0, commentRepo.readAll().size());
     }
 
 

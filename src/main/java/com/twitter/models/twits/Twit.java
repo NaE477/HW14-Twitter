@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,8 +22,8 @@ public class Twit extends BaseTwit {
         super(content,user);
     }
 
-    public Twit(Integer id, String content, User user, Date date) {
-        super(id,content,user,date);
+    public Twit(Integer id, String content, User user, Date date, Set<Like> likes) {
+        super(id,content,user,date,likes);
     }
 
     @Override
