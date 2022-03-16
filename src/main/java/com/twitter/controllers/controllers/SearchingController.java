@@ -22,6 +22,7 @@ import org.hibernate.SessionFactory;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SearchingController {
@@ -47,7 +48,7 @@ public class SearchingController {
     }
 
     public void entry() {
-        whileLabel:
+        label:
         while (true) {
             List<User> users = findUsersByUsername();
             utils.iterateThrough(users);
@@ -56,7 +57,13 @@ public class SearchingController {
                 String usernameToView = sc.nextLine();
                 User userToView = userService.findByUsername(usernameToView);
                 if (!usernameToView.equals("0") && userToView != null) {
-                    String opt = searchMenu();
+                    System.out.println("1-View Twits");
+                    System.out.println("2-View Comments");
+                    System.out.println("2-View All Activity");
+                    System.out.println("4-View Profile");
+                    System.out.println("5-Follow/Unfollow");
+                    System.out.println("0-Exit");
+                    String opt = sc.nextLine();
                     switch (opt) {
                         case "1":
                             viewUserTwits(userToView);
@@ -69,8 +76,10 @@ public class SearchingController {
                         case "4":
                             utils.printGreen(userToView.toString());
                             break;
+                        case "5":
+                            followUnfollow(userToView);
                         case "0":
-                            break whileLabel;
+                            break label;
                     }
                 } else if (usernameToView.equals("0")) {
                     break;
@@ -128,12 +137,16 @@ public class SearchingController {
         return userService.searchUsername(toSearch);
     }
 
-    private String searchMenu() {
-        System.out.println("1-View Twits");
-        System.out.println("2-View Comments");
-        System.out.println("2-View All Activity");
-        System.out.println("4-View Profile");
-        System.out.println("0-Exit");
-        return sc.nextLine();
+    private void followUnfollow(User toFollow) {
+        Set<User> followers = toFollow.getFollowers();
+        if (followers.contains(user)) {
+            followers.remove(user);
+            System.out.println("Unfollowed");
+        } else {
+            followers.add(user);
+            System.out.println("Followed");
+        }
+        toFollow.setFollowers(followers);
+        userService.update(toFollow);
     }
 }

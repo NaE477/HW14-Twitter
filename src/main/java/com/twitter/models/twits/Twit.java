@@ -4,7 +4,6 @@ import com.twitter.models.user.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -14,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "twits")
 public class Twit extends BaseTwit {
-    @OneToMany(mappedBy = "ownerTwit")
+    @OneToMany(mappedBy = "ownerTwit",fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     public Twit(String content,User user) {

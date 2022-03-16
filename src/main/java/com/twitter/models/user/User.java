@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -37,22 +38,22 @@ public class User extends Identity {
     private String email;
 
     @OneToMany(mappedBy = "user")
-    private List<Twit> twits;
+    private Set<Twit> twits;
 
     @OneToMany(mappedBy = "user")
-    private List<Comment> comments;
+    private Set<Comment> comments;
 
     @OneToMany(mappedBy = "liker")
-    private List<Like> likes;
+    private Set<Like> likes;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(name = "USER_RELATIONS",
             joinColumns = @JoinColumn(name = "FOLLOWED_ID"),
             inverseJoinColumns = @JoinColumn(name = "FOLLOWER_ID"))
-    private List<User> followers;
+    private Set<User> followers;
 
-    @ManyToMany(mappedBy = "followers")
-    private List<User> following;
+    @ManyToMany(mappedBy = "followers",fetch = FetchType.EAGER)
+    private Set<User> following;
 
     public User(Integer id, String firstname, String lastname, String username, String password, String email) {
         super(id);
@@ -66,10 +67,11 @@ public class User extends Identity {
     @Override
     public String toString() {
         return "ID: " + super.getId() +
-                ", Firstname: '" + firstname +
-                ", Lastname: '" + lastname +
-                ", Username: '" + username +
-                ", Password: '" + password +
-                ", Email: '" + email;
+                "\n, Firstname: " + firstname +
+                "\n, Lastname: " + lastname +
+                "\n, Username: " + username +
+                "\n, Password: " + password +
+                "\n, Email: " + email +
+                "\n, Followers: " + followers.size();
     }
 }

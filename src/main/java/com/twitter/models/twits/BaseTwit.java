@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,15 +34,14 @@ public abstract class BaseTwit extends Identity {
     private Date twitTime;
 
     @Column(name = "delete_stat")
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "twit",fetch = FetchType.EAGER)
-    private List<Like> likes;
+    private Set<Like> likes;
 
     public BaseTwit(String content, User user) {
         this.content = content;
         this.user = user;
         this.twitTime = new Date(System.currentTimeMillis());
-        isDeleted = false;
     }
 }

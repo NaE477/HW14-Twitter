@@ -83,4 +83,19 @@ public class ReplyRepoImpl extends BaseRepositoryImpl<Reply> implements ReplyRep
             }
         }
     }
+
+    @Override
+    public List<Reply> readAllByComment(Comment comment) {
+        try (var session = super.getSessionFactory().openSession()) {
+            try {
+                return session
+                        .createQuery("from Reply r where r.comment.id = :commentId", Reply.class)
+                        .setParameter("commentId",comment.getId())
+                        .list();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
 }

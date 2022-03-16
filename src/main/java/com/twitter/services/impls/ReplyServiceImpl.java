@@ -1,5 +1,6 @@
 package com.twitter.services.impls;
 
+import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Reply;
 import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.ReplyRepo;
@@ -22,5 +23,10 @@ public class ReplyServiceImpl extends BaseServiceImpl<Reply, ReplyRepo>
     @Override
     public List<Reply> findAllByUser(User user) {
         return repository.readAllByUser(user);
+    }
+
+    @Override
+    public List<Reply> findAllByComment(Comment comment) {
+        return repository.readAllByComment(comment);
     }
 }
