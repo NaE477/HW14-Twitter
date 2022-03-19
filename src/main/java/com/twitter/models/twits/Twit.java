@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "twits")
 public class Twit extends BaseTwit {
-    @OneToMany(mappedBy = "ownerTwit",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "ownerTwit")
     private List<Comment> comments;
 
     public Twit(String content,User user) {

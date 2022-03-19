@@ -4,6 +4,7 @@ import com.twitter.controllers.Utilities;
 import com.twitter.models.twits.BaseTwit;
 import com.twitter.models.twits.Comment;
 import com.twitter.models.twits.Twit;
+import com.twitter.models.twits.TwitProxy;
 import com.twitter.models.user.User;
 import com.twitter.repos.impls.CommentRepoImpl;
 import com.twitter.repos.impls.ReplyRepoImpl;
@@ -17,7 +18,6 @@ import com.twitter.services.interfaces.CommentService;
 import com.twitter.services.interfaces.ReplyService;
 import com.twitter.services.interfaces.TwitService;
 import com.twitter.services.interfaces.UserService;
-import org.hibernate.SessionFactory;
 
 import java.util.Comparator;
 import java.util.List;
@@ -30,20 +30,18 @@ public class SearchingController {
     private final TwitService twitService;
     private final CommentService commentService;
     private final ReplyService replyService;
-    private final SessionFactory sessionFactory;
     private final User user;
 
     private final Utilities utils;
     private final Scanner sc;
 
-    public SearchingController(SessionFactory sessionFactory, Integer userId) {
-        this.sessionFactory = sessionFactory;
-        userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
-        twitService = new TwitServiceImpl(new TwitRepoImpl(sessionFactory));
-        commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
-        replyService = new ReplyServiceImpl(new ReplyRepoImpl(sessionFactory));
+    public SearchingController(Integer userId) {
+        userService = new UserServiceImpl(new UsersRepoImpl());
+        twitService = new TwitServiceImpl(new TwitRepoImpl());
+        commentService = new CommentServiceImpl(new CommentRepoImpl());
+        replyService = new ReplyServiceImpl(new ReplyRepoImpl());
         user = userService.findById(userId);
-        utils = new Utilities(sessionFactory);
+        utils = new Utilities();
         sc = new Scanner(System.in);
     }
 
@@ -52,7 +50,7 @@ public class SearchingController {
         while (true) {
             List<User> users = findUsersByUsername();
             utils.iterateThrough(users);
-            if (users != null && users.size() > 0) {
+            if (users.size() > 0) {
                 System.out.println("Enter Username you want to check or 0 to exit: ");
                 String usernameToView = sc.nextLine();
                 User userToView = userService.findByUsername(usernameToView);
@@ -104,28 +102,36 @@ public class SearchingController {
     }
 
     private void viewUserTwits(User userToView) {
-        List<Twit> twits = twitService.findAllByUser(userToView);
+        List<Twit> twits = twitService.findAllByUser(userToView)
+                .stream()
+                .filter(twit -> !twit.getIsDeleted())
+                .sorted(Comparator.comparing(BaseTwit::getTwitTime))
+                .collect(Collectors.toList());
         utils.iterateThrough(twits);
         if (twits.size() > 0) {
             System.out.println("Choose Twit ID: ");
             Integer twitId = utils.intReceiver();
-            Twit twitToView = twitService.findById(twitId);
-            if (twitToView != null && twits.contains(twitToView)) {
-                ObserveTwitController<Twit> observeTwitController = new ObserveTwitController<>(sessionFactory, twitToView, user.getId());
+            TwitProxy twitToViewProxy = new TwitProxy(twitId,false);
+            if (twitToViewProxy.getTwit() != null && twits.contains(twitToViewProxy.getTwit())) {
+                ObserveTwitController<TwitProxy> observeTwitController = new ObserveTwitController<>(twitToViewProxy, user.getId());
                 observeTwitController.viewTwit();
             } else System.out.println("Wrong ID.");
         } else utils.printRed("User has no twits yet");
     }
 
     private void viewUserComments(User userToView) {
-        List<Comment> comments = commentService.findAllByUser(userToView);
+        List<Comment> comments = commentService.findAllByUser(userToView)
+                .stream()
+                .filter(comment -> !comment.getIsDeleted())
+                .sorted(Comparator.comparing(BaseTwit::getTwitTime))
+                .collect(Collectors.toList());
         utils.iterateThrough(comments);
         if (comments.size() > 0) {
             System.out.println("Choose Comment ID: ");
             Integer commentId = utils.intReceiver();
             Comment commentToView = commentService.findById(commentId);
             if (commentToView != null && comments.contains(commentToView)) {
-                ObserveCommentController<Comment> observeTwitController = new ObserveCommentController<>(sessionFactory, commentToView, user.getId());
+                ObserveCommentController<Comment> observeTwitController = new ObserveCommentController<>(commentToView, user.getId());
                 observeTwitController.viewComment();
             } else System.out.println("Wrong ID.");
         } else utils.printRed("User has no twits yet");

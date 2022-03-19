@@ -26,11 +26,10 @@ class CommentRepoTest {
 
     @BeforeAll
     static void initialize() {
-        SessionFactory sessionFactory = SessionFactorySingletonTest.getInstance();
-        commentRepo = new CommentRepoImpl(sessionFactory);
+        commentRepo = new CommentRepoImpl();
 
-        twitService = new TwitServiceImpl(new TwitRepoImpl(sessionFactory));
-        userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+        twitService = new TwitServiceImpl(new TwitRepoImpl());
+        userService = new UserServiceImpl(new UsersRepoImpl());
     }
 
     @Test
@@ -145,8 +144,7 @@ class CommentRepoTest {
         commentRepo.delete(newComment);
 
         //Assert
-        assertNull(commentRepo.readById(newComment.getId()));
-        assertEquals(0, commentRepo.readAll().size());
+        assertTrue(commentRepo.readById(newComment.getId()).getIsDeleted());
     }
 
 

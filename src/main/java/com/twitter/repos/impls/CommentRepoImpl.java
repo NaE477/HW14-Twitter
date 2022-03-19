@@ -6,9 +6,14 @@ import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.CommentRepo;
 import org.hibernate.SessionFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements CommentRepo, com.twitter.repos.interfaces.BaseRepository<Comment> {
+
+    public CommentRepoImpl() {
+        super();
+    }
 
     public CommentRepoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
@@ -32,7 +37,7 @@ public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements Comm
                 return session.createQuery("from Comment",Comment.class).list();
             } catch (Exception e) {
                 e.printStackTrace();
-                return null;
+                return new ArrayList<>();
             }
         }
     }
@@ -46,8 +51,7 @@ public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements Comm
                         .setParameter("twitId",twit.getId())
                         .list();
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+                return new ArrayList<>();
             }
         }
     }
@@ -61,8 +65,24 @@ public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements Comm
                         .setParameter("userId",user.getId())
                         .list();
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+                return new ArrayList<>();
+            }
+        }
+    }
+
+    @Override
+    public void delete(Comment comment) {
+        try (var session = super.getSessionFactory().openSession()) {
+            var transaction = session.beginTransaction();
+            try {
+                session
+                        .createQuery("update Comment c set c.isDeleted = true where c.id = :commentId")
+                        .setParameter("commentId",comment.getId())
+                        .executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
             }
         }
     }
@@ -73,7 +93,7 @@ public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements Comm
             var transaction = session.beginTransaction();
             try {
                 session
-                        .createQuery("update Comment c set c.isDeleted = true where c.user.id = :userId",Comment.class)
+                        .createQuery("update Comment c set c.isDeleted = true where c.user.id = :userId")
                         .setParameter("userId",user.getId())
                         .executeUpdate();
                 transaction.commit();
@@ -89,7 +109,7 @@ public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements Comm
         try (var session = super.getSessionFactory().openSession()) {
             var transaction = session.beginTransaction();
             try {
-                String truncateStmt = "TRUNCATE twits cascade ;";
+                String truncateStmt = "TRUNCATE comments cascade ;";
                 session.createNativeQuery(truncateStmt).executeUpdate();
                 transaction.commit();
             } catch (Exception e) {

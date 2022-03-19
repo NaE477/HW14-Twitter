@@ -7,9 +7,14 @@ import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.ReplyRepo;
 import org.hibernate.SessionFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReplyRepoImpl extends BaseRepositoryImpl<Reply> implements ReplyRepo {
+    public ReplyRepoImpl() {
+        super();
+    }
+
     public ReplyRepoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
@@ -29,10 +34,9 @@ public class ReplyRepoImpl extends BaseRepositoryImpl<Reply> implements ReplyRep
     public List<Reply> readAll() {
         try (var session = super.getSessionFactory().openSession()) {
             try {
-                return session.createQuery("from Reply",Reply.class).list();
+                return session.createQuery("from Reply", Reply.class).list();
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+                return new ArrayList<>();
             }
         }
     }
@@ -53,14 +57,25 @@ public class ReplyRepoImpl extends BaseRepositoryImpl<Reply> implements ReplyRep
     }
 
     @Override
+    public void delete(Reply reply) {
+        try (var session = super.getSessionFactory().openSession()) {
+            var transaction = session.beginTransaction();
+            try {
+                session.createQuery("update Reply r set r.isDeleted = true where r.id = :replyId").setParameter("replyId", reply.getId()).executeUpdate();
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
+            }
+        }
+    }
+
+    @Override
     public void delete(User user) {
         try (var session = super.getSessionFactory().openSession()) {
             var transaction = session.beginTransaction();
             try {
-                session
-                        .createQuery("update Reply r set r.isDeleted = true where r.user.id = :userId", Reply.class)
-                        .setParameter("userId",user.getId())
-                        .executeUpdate();
+                session.createQuery("update Reply r set r.isDeleted = true where r.user.id = :userId").setParameter("userId", user.getId()).executeUpdate();
                 transaction.commit();
             } catch (Exception e) {
                 transaction.rollback();
@@ -73,13 +88,9 @@ public class ReplyRepoImpl extends BaseRepositoryImpl<Reply> implements ReplyRep
     public List<Reply> readAllByUser(User user) {
         try (var session = super.getSessionFactory().openSession()) {
             try {
-                return session
-                        .createQuery("from Reply r where r.user.id = :userId", Reply.class)
-                        .setParameter("userId",user.getId())
-                        .list();
+                return session.createQuery("from Reply r where r.user.id = :userId", Reply.class).setParameter("userId", user.getId()).list();
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+                return new ArrayList<>();
             }
         }
     }
@@ -88,13 +99,9 @@ public class ReplyRepoImpl extends BaseRepositoryImpl<Reply> implements ReplyRep
     public List<Reply> readAllByComment(Comment comment) {
         try (var session = super.getSessionFactory().openSession()) {
             try {
-                return session
-                        .createQuery("from Reply r where r.comment.id = :commentId", Reply.class)
-                        .setParameter("commentId",comment.getId())
-                        .list();
+                return session.createQuery("from Reply r where r.comment.id = :commentId", Reply.class).setParameter("commentId", comment.getId()).list();
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+                return new ArrayList<>();
             }
         }
     }

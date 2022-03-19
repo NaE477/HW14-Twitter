@@ -22,19 +22,17 @@ import java.util.Scanner;
 public class TwittingController {
     private final TwitService twitService;
     private final CommentService commentService;
-    private final SessionFactory sessionFactory;
     private final User user;
     private final Scanner sc;
     private final Utilities utils;
 
-    public TwittingController(SessionFactory sessionFactory, Integer userId) {
-        this.sessionFactory = sessionFactory;
-        twitService = new TwitServiceImpl(new TwitRepoImpl(sessionFactory));
-        commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
+    public TwittingController(Integer userId) {
+        twitService = new TwitServiceImpl(new TwitRepoImpl());
+        commentService = new CommentServiceImpl(new CommentRepoImpl());
         sc = new Scanner(System.in);
-        utils = new Utilities(sessionFactory);
+        utils = new Utilities();
 
-        UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+        UserService userService = new UserServiceImpl(new UsersRepoImpl());
         user = userService.findById(userId);
     }
 
@@ -137,7 +135,7 @@ public class TwittingController {
         Comment commentToObserve = utils.findIdInCollection(comments,commentId);
         if(commentId != 0) {
             if (commentToObserve != null) {
-                ObserveCommentController<Comment> observeCommentController = new ObserveCommentController<>(sessionFactory, commentToObserve, user.getId());
+                ObserveCommentController<Comment> observeCommentController = new ObserveCommentController<>(commentToObserve, user.getId());
                 observeCommentController.viewComment();
             } else System.out.println("Wrong ID");
         }

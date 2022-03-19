@@ -7,9 +7,17 @@ import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.LikeRepo;
 import org.hibernate.SessionFactory;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LikeRepoImpl extends BaseRepositoryImpl<Like> implements LikeRepo {
+    public LikeRepoImpl() {
+        super();
+    }
+
     public LikeRepoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
@@ -31,8 +39,7 @@ public class LikeRepoImpl extends BaseRepositoryImpl<Like> implements LikeRepo {
             try {
                 return session.createQuery("from Like",Like.class).list();
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+                return new ArrayList<>();
             }
         }
     }
@@ -62,6 +69,19 @@ public class LikeRepoImpl extends BaseRepositoryImpl<Like> implements LikeRepo {
                         .getSingleResult();
             } catch (Exception e) {
                 return null;
+            }
+        }
+    }
+
+    @Override
+    public <T extends BaseTwit> Set<Like> readByTwit(T twit) {
+        try (var session = super.getSessionFactory().openSession()) {
+            try {
+                return new HashSet<>(session.createQuery("from Like l where l.twit.id = :twitId", Like.class)
+                        .setParameter("twitId", twit.getId())
+                        .getResultList());
+            } catch (Exception e) {
+                return new HashSet<>();
             }
         }
     }

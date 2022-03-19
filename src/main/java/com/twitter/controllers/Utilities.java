@@ -15,8 +15,8 @@ public class Utilities {
     private final Scanner scanner = new Scanner(System.in);
     private final UserServiceImpl userService;
 
-    public Utilities(SessionFactory sessionFactory) {
-        userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+    public Utilities() {
+        userService = new UserServiceImpl(new UsersRepoImpl());
     }
 
     public void menuViewer(List<String> options) {

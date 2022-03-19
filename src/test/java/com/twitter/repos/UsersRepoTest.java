@@ -18,8 +18,7 @@ class UsersRepoTest {
 
     @BeforeAll
     static void initialize() {
-        SessionFactory sessionFactory = SessionFactorySingletonTest.getInstance();
-        usersRepo = new UsersRepoImpl(sessionFactory);
+        usersRepo = new UsersRepoImpl();
     }
 
     @Test

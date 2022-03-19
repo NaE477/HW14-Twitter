@@ -12,15 +12,13 @@ import java.util.Scanner;
 
 public class UserController {
     private final User user;
-    private final SessionFactory sessionFactory;
     private final Utilities utils;
     private final Scanner sc = new Scanner(System.in);
 
-    public UserController(SessionFactory sessionFactory, Integer userId) {
-        this.sessionFactory = sessionFactory;
-        UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+    public UserController(Integer userId) {
+        UserService userService = new UserServiceImpl(new UsersRepoImpl());
         this.user = userService.findById(userId);
-        utils = new Utilities(sessionFactory);
+        utils = new Utilities();
     }
 
     public void entry() {
@@ -59,22 +57,22 @@ public class UserController {
 
 
     public void feed() {
-        FeedController feedController = new FeedController(sessionFactory,user.getId());
+        FeedController feedController = new FeedController(user.getId());
         feedController.entry();
     }
 
     private void twitting() {
-        TwittingController twittingController = new TwittingController(sessionFactory,user.getId());
+        TwittingController twittingController = new TwittingController(user.getId());
         twittingController.entry();
     }
 
     private void profile() {
-        ProfileController profileController = new ProfileController(sessionFactory,user.getId());
+        ProfileController profileController = new ProfileController(user.getId());
         profileController.entry();
     }
 
     private void searchUser() {
-        SearchingController searchingController = new SearchingController(sessionFactory,user.getId());
+        SearchingController searchingController = new SearchingController(user.getId());
         searchingController.entry();
     }
 }

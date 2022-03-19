@@ -1,18 +1,21 @@
 package com.twitter.repos.impls;
 
+import com.twitter.controllers.SessionFactorySingleton;
 import com.twitter.models.Identity;
 import com.twitter.repos.interfaces.BaseRepository;
+import com.twitter.services.impls.BaseServiceImpl;
 import lombok.Getter;
 import org.hibernate.SessionFactory;
 
 @Getter
 public abstract class BaseRepositoryImpl<T extends Identity> implements BaseRepository<T> {
-    private final SessionFactory sessionFactory;
-
-    protected BaseRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    private SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
+    public BaseRepositoryImpl() {
     }
 
+    public BaseRepositoryImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public T ins(T t) {

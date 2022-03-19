@@ -16,10 +16,10 @@ public class ProfileController {
     private final Utilities utils;
     private final User user;
 
-    public ProfileController(SessionFactory sessionFactory, Integer userId) {
-        userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+    public ProfileController(Integer userId) {
+        userService = new UserServiceImpl(new UsersRepoImpl());
         sc = new Scanner(System.in);
-        utils = new Utilities(sessionFactory);
+        utils = new Utilities();
         user = userService.findById(userId);
     }
 

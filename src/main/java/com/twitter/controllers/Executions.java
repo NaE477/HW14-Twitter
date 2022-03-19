@@ -12,10 +12,9 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class Executions {
-    static SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
-    static Utilities utils = new Utilities(sessionFactory);
+    static Utilities utils = new Utilities();
     static Scanner sc = new Scanner(System.in);
-    static UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+    static UserService userService = new UserServiceImpl(new UsersRepoImpl());
 
     public static void main(String[] args) {
         label:
@@ -46,7 +45,7 @@ public class Executions {
         String password = sc.nextLine();
         User userToLogin = auth(username,password);
         if (userToLogin != null) {
-            UserController userController = new UserController(sessionFactory,userToLogin.getId());
+            UserController userController = new UserController(userToLogin.getId());
             userController.entry();
         } else {
             utils.printRed("Wrong username/password");

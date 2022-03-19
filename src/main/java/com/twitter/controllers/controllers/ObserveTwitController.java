@@ -12,29 +12,26 @@ import com.twitter.services.impls.UserServiceImpl;
 import com.twitter.services.interfaces.CommentService;
 import com.twitter.services.interfaces.LikeService;
 import com.twitter.services.interfaces.UserService;
-import org.hibernate.SessionFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ObserveTwitController<T extends Twit> {
-    private final SessionFactory sessionFactory;
+public class ObserveTwitController<T extends TwitProxy> {
     private final LikeService likeService;
     private final CommentService commentService;
     private final Utilities utils;
     private final Scanner sc;
-    private final T twit;
+    private final T twitProxy;
     private final User user;
 
-    public ObserveTwitController(SessionFactory sessionFactory, T twit, Integer userId) {
-        this.sessionFactory = sessionFactory;
-        commentService = new CommentServiceImpl(new CommentRepoImpl(sessionFactory));
-        likeService = new LikeServiceImpl(new LikeRepoImpl(sessionFactory));
-        utils = new Utilities(sessionFactory);
+    public ObserveTwitController(T twit, Integer userId) {
+        commentService = new CommentServiceImpl(new CommentRepoImpl());
+        likeService = new LikeServiceImpl(new LikeRepoImpl());
+        utils = new Utilities();
         sc = new Scanner(System.in);
-        this.twit = twit;
+        this.twitProxy = twit;
 
-        UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+        UserService userService = new UserServiceImpl(new UsersRepoImpl());
         user = userService.findById(userId);
     }
 
@@ -42,7 +39,7 @@ public class ObserveTwitController<T extends Twit> {
         label:
         while (true) {
             ArrayList<String> menu = new ArrayList<>();
-            menu.add(twit.toString());
+            menu.add(twitProxy.getTwit().toString());
             menu.add("L: Like/Dislike|C: Comments|R: Reply|N: Do Nothing/Exit");
             utils.menuViewer(menu);
             String opt = sc.nextLine().toUpperCase(Locale.ROOT);
@@ -66,8 +63,9 @@ public class ObserveTwitController<T extends Twit> {
     }
 
     private void viewComments() {
+        twitProxy.initializeComments();
         List<Comment> comments = new ArrayList<>();
-        twit.getComments()
+        twitProxy.getTwit().getComments()
                 .stream()
                 .filter(comment -> !comment.getIsDeleted())
                 .forEach(comments::add);
@@ -77,14 +75,14 @@ public class ObserveTwitController<T extends Twit> {
         Comment toReply = utils.findIdInCollection(comments,commentId);
         if (commentId != 0) {
             if (toReply != null) {
-                ObserveCommentController<Comment> commentObserveCommentController = new ObserveCommentController<>(sessionFactory,toReply,user.getId());
+                ObserveCommentController<Comment> commentObserveCommentController = new ObserveCommentController<>(toReply,user.getId());
                 commentObserveCommentController.viewComment();
             }
         }
     }
 
     private void likeDislike() {
-        Set<User> likers = twit.getLikes().stream().map(Like::getLiker).collect(Collectors.toSet());
+        Set<User> likers = twitProxy.getTwit().getLikes().stream().map(Like::getLiker).collect(Collectors.toSet());
         if (likers.contains(user)) {
             dislike();
         } else {
@@ -93,16 +91,16 @@ public class ObserveTwitController<T extends Twit> {
     }
 
     private void like() {
-        Like like = new Like(twit,user);
+        Like like = new Like(twitProxy.getTwit(),user);
         likeService.insert(like);
-        twit.getLikes().add(like);
+        twitProxy.getTwit().getLikes().add(like);
         System.out.println("Liked");
     }
 
     private void dislike() {
-        Like toRemove = likeService.findByTwitAndUser(twit,user);
+        Like toRemove = likeService.findByTwitAndUser(twitProxy.getTwit(),user);
         likeService.delete(toRemove);
-        twit.getLikes().remove(toRemove);
+        twitProxy.getTwit().getLikes().remove(toRemove);
         System.out.println("Unliked");
     }
 
@@ -110,10 +108,10 @@ public class ObserveTwitController<T extends Twit> {
         Comment comment = new Comment();
         System.out.println("Comment: ");
         comment.setContent(utils.contentReceiver());
-        comment.setOwnerTwit(twit);
+        comment.setOwnerTwit(twitProxy.getTwit());
         comment.setUser(user);
         Comment newComment = commentService.insert(comment);
-        twit.getComments().add(newComment);
+        twitProxy.getTwit().getComments().add(newComment);
         System.out.println("New Comment Added with ID: " + newComment.getId());
     }
 }

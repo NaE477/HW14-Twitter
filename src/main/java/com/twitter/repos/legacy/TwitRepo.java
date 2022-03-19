@@ -75,15 +75,13 @@ public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
     @Override
     public Integer ins(Twit twit) {
         String insStmt = "INSERT INTO twits (id,content, user_id,twit_time,delete_stat) " +
-                "VALUES (100,?,?,NOW(),false) RETURNING id;";
+                "VALUES (1,?,?,NOW(),false);";
         try {
             PreparedStatement ps = super.getConnection().prepareStatement(insStmt);
             ps.setString(1, twit.getContent());
             ps.setInt(2, twit.getUser().getId());
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("id");
-            }
+            ps.execute();
+            return read(1).getId();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -157,7 +155,7 @@ public class TwitRepo extends BaseRepo<Twit> implements Repo<Twit> {
     }
 
     public void truncate() {
-        String truncateStmt = "truncate twitter_test.public.twits cascade ;";
+        String truncateStmt = "TRUNCATE twits CASCADE;";
         try {
             PreparedStatement ps = super.getConnection().prepareStatement(truncateStmt);
             ps.executeUpdate();

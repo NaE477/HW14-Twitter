@@ -30,14 +30,14 @@ public class ObserveCommentController<T extends Comment> {
     private final T comment;
     private final User user;
 
-    public ObserveCommentController(SessionFactory sessionFactory, T comment, Integer userId) {
-        replyService = new ReplyServiceImpl(new ReplyRepoImpl(sessionFactory));
-        likeService = new LikeServiceImpl(new LikeRepoImpl(sessionFactory));
-        utils = new Utilities(sessionFactory);
+    public ObserveCommentController(T comment, Integer userId) {
+        replyService = new ReplyServiceImpl(new ReplyRepoImpl());
+        likeService = new LikeServiceImpl(new LikeRepoImpl());
+        utils = new Utilities();
         sc = new Scanner(System.in);
         this.comment = comment;
 
-        UserService userService = new UserServiceImpl(new UsersRepoImpl(sessionFactory));
+        UserService userService = new UserServiceImpl(new UsersRepoImpl());
         user = userService.findById(userId);
     }
 

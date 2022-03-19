@@ -6,6 +6,8 @@ import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.LikeRepo;
 import com.twitter.services.interfaces.LikeService;
 
+import java.util.Set;
+
 public class LikeServiceImpl extends BaseServiceImpl<Like, LikeRepo>
         implements LikeService {
     public LikeServiceImpl(LikeRepo repository) {
@@ -15,6 +17,11 @@ public class LikeServiceImpl extends BaseServiceImpl<Like, LikeRepo>
     @Override
     public <T extends BaseTwit> Like findByTwitAndUser(T twit, User user) {
         return repository.readByTwitAndUser(twit,user);
+    }
+
+    @Override
+    public <T extends BaseTwit> Set<Like> findByTwit(T twit) {
+        return repository.readByTwit(twit);
     }
 
     @Override

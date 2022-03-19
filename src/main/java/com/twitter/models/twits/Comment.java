@@ -16,7 +16,7 @@ public class Comment extends BaseTwit {
     @ManyToOne
     private Twit ownerTwit;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment",fetch = FetchType.EAGER)
     private List<Reply> replies;
 
     public Comment(String content, User user,Twit ownerTwit) {

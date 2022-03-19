@@ -1,13 +1,17 @@
 package com.twitter.repos.adapters;
 
-import com.twitter.models.twits.Like;
+import com.twitter.controllers.SessionFactorySingleton;
 import com.twitter.models.twits.Twit;
 import com.twitter.models.user.User;
-import com.twitter.repos.SessionFactorySingletonTest;
+import com.twitter.repos.impls.TwitRepoImpl;
 import com.twitter.repos.impls.UsersRepoImpl;
 import com.twitter.repos.legacy.TwitRepo;
+import com.twitter.services.impls.TwitServiceImpl;
 import com.twitter.services.impls.UserServiceImpl;
+import com.twitter.services.interfaces.TwitService;
 import com.twitter.services.interfaces.UserService;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +22,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,19 +30,15 @@ class LegacyTwitRepoAdapterTest {
     private static UserService userService;
 
     @BeforeAll
-    static void initialize() {
-        Connection connection = null;
-        try {
-            connection = SessionFactorySingletonTest.getInstance()
+    static void initialize() throws SQLException {
+        //Connection connection = SessionFactorySingleton.getInstance().openStatelessSession().connection();
+        Connection connection = SessionFactorySingleton.getInstance()
                     .getSessionFactoryOptions()
                     .getServiceRegistry()
                     .getService(ConnectionProvider.class)
                     .getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         adapter = new LegacyTwitRepoAdapter(new TwitRepo(connection));
-        userService = new UserServiceImpl(new UsersRepoImpl(SessionFactorySingletonTest.getInstance()));
+        userService = new UserServiceImpl(new UsersRepoImpl());
     }
 
     @Test
@@ -54,7 +53,7 @@ class LegacyTwitRepoAdapterTest {
         assertNotNull(newTwit);
     }
 
-    @Test
+    /*@Test
     void readById() {
     }
 
@@ -72,11 +71,12 @@ class LegacyTwitRepoAdapterTest {
 
     @Test
     void truncate() {
-    }
+    }*/
 
     @AfterEach
     void wipe() {
+        TwitService twitService = new TwitServiceImpl(new TwitRepoImpl());
+        twitService.truncate();
         userService.truncate();
-        adapter.truncate();
     }
 }

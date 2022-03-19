@@ -4,9 +4,14 @@ import com.twitter.models.user.User;
 import com.twitter.repos.interfaces.UsersRepo;
 import org.hibernate.SessionFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo {
+    public UsersRepoImpl() {
+        super();
+    }
+
     public UsersRepoImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
@@ -55,7 +60,7 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
                         .setParameter("username", "%" + username + "%")
                         .list();
             } catch (Exception e) {
-                return null;
+                return new ArrayList<>();
             }
         }
     }
@@ -67,7 +72,7 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
                         .createQuery("from User", User.class)
                         .list();
             } catch (Exception e) {
-                return null;
+                return new ArrayList<>();
             }
         }
     }
@@ -92,8 +97,8 @@ public class UsersRepoImpl extends BaseRepositoryImpl<User> implements UsersRepo
         try (var session = super.getSessionFactory().openSession()) {
             var transaction = session.beginTransaction();
             try {
-                String truncateStmt = "delete from users;";
-                session.createNativeQuery(truncateStmt).executeUpdate();
+                String truncateStmt = "truncate users cascade;";
+                session.createSQLQuery(truncateStmt).executeUpdate();
                 transaction.commit();
             } catch (Exception e) {
                 e.printStackTrace();

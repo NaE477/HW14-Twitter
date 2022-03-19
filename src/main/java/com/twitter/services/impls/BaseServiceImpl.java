@@ -3,7 +3,6 @@ package com.twitter.services.impls;
 import com.twitter.models.Identity;
 import com.twitter.repos.interfaces.BaseRepository;
 import com.twitter.services.interfaces.BaseService;
-import org.hibernate.SessionFactory;
 
 import java.util.List;
 
