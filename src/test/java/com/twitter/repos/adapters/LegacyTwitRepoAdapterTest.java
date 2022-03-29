@@ -10,8 +10,6 @@ import com.twitter.services.impls.TwitServiceImpl;
 import com.twitter.services.impls.UserServiceImpl;
 import com.twitter.services.interfaces.TwitService;
 import com.twitter.services.interfaces.UserService;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

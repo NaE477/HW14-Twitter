@@ -8,10 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @MappedSuperclass
 public class Identity {
     @Id

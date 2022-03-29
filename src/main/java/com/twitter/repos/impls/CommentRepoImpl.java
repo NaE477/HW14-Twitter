@@ -9,7 +9,7 @@ import org.hibernate.SessionFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements CommentRepo, com.twitter.repos.interfaces.BaseRepository<Comment> {
+public class CommentRepoImpl extends BaseRepositoryImpl<Comment> implements CommentRepo {
 
     public CommentRepoImpl() {
         super();

@@ -7,7 +7,8 @@ import com.twitter.services.interfaces.BaseService;
 import java.util.List;
 
 public abstract class BaseServiceImpl<T extends Identity
-        , R extends BaseRepository<T>> implements BaseService<T> {
+        , R extends BaseRepository<T>>
+        implements BaseService<T> {
     R repository;
 
     protected BaseServiceImpl(R repository) {
